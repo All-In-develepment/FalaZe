@@ -1,6 +1,6 @@
 ## FalaZe
 
-#CRM com whatsapp
+# CRM com whatsapp
 
 Para executar o projeto, inicialmente deve-se criar o arquivo .env baseado no .env.example, preencher o arquivo .env, com o campo DB_HOST=db-mysql, o restante com suas informações.
 
