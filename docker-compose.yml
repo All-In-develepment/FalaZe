@@ -1,0 +1,52 @@
+
+version: '3'
+
+services:
+  db-mysql:
+    platform: linux/x86_64
+    image: mysql:5.7
+    restart: always
+    container_name: db_whatsapp_bot
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_ROOT_HOST: '%'
+      max-allowed-packet: 67108864
+    ports:
+      - '${DB_PORT}:3306'
+  api:
+    build:
+      dockerfile: Dev.Dockerfile
+    container_name: whatsapp_bot
+    restart: always
+    depends_on:
+      - db-mysql
+      - migrations
+    ports:
+      - '${PORT}:8080'
+    volumes:
+      - .:/usr/src/app
+  migrations:
+    build:
+      dockerfile: Dev.Dockerfile
+    container_name: whatsapp_bot_migrations
+    restart: always
+    depends_on:
+      - db-mysql
+    volumes:
+      - .:/usr/src/app
+    command: npx sequelize db:migrate && sequelize db:seed:all
+
+  # db-mssql:
+  #   platform: linux/x86_64
+  #   image: mcr.microsoft.com/mssql/server:2022-latest
+  #   restart: always
+  #   environment:
+  #     SA_PASSWORD: "2802#biel"
+  #     ACCEPT_EULA: "Y"
+  #     MSSQL_PID: "Developer"
+  #   ports:
+  #     - "1433:1433"
+  #   cap_add:
+  #     - SYS_PTRACE
