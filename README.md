@@ -8,7 +8,6 @@ Em seguida rode o comando
 
 ```
 docker-compose up -d
-
 ```
 
 esse comando gerará as imagens e executará o docker automaticamente.
@@ -19,14 +18,12 @@ No docker:
 
   ```
   docker-compose ps
-
   ```
 
 - [ ] Agora precisa acessar o docker, use,
 
   ```
   docker exec -it whatsapp_bot /bin/bash
-
   ```
 
 - [ ] Dentro da máquina linux do docker precisamos gerar as migrations
@@ -34,5 +31,4 @@ No docker:
   ```
   npx sequelize db:migrate
   npx sequelize db:seed:all
-
   ```
