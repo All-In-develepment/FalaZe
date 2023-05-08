@@ -17,6 +17,7 @@ import Message from "./Message";
 import Queue from "./Queue";
 import User from "./User";
 import Whatsapp from "./Whatsapp";
+import Tag from "./Tag";
 
 @Table
 class Ticket extends Model<Ticket> {
@@ -74,6 +75,13 @@ class Ticket extends Model<Ticket> {
 
   @HasMany(() => Message)
   messages: Message[];
+
+  @ForeignKey(() => Tag)
+  @Column
+  tagId: number;
+
+  @BelongsTo(() => Tag)
+  tag: Tag;
 }
 
 export default Ticket;

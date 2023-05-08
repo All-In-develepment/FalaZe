@@ -10,6 +10,7 @@ import Queue from "../models/Queue";
 import WhatsappQueue from "../models/WhatsappQueue";
 import UserQueue from "../models/UserQueue";
 import QuickAnswer from "../models/QuickAnswer";
+import Tag from "../models/Tag";
 
 // eslint-disable-next-line
 const dbConfig = require("../config/database");
@@ -25,7 +26,8 @@ export const models = [
   Queue,
   WhatsappQueue,
   UserQueue,
-  QuickAnswer
+  QuickAnswer,
+  Tag
 ];
 
 export class Database {

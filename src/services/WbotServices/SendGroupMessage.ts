@@ -1,5 +1,5 @@
 import AppError from "../../errors/AppError";
-import { delay } from "../../helpers/EditGroups";
+import { delay } from "../../helpers/GetGroups";
 import { GetGroupsAdmin } from "./GetGroupsAdmin";
 
 export interface ISendGroupMessage {

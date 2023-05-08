@@ -1,7 +1,7 @@
 import { Contact, CreateGroupResult } from "whatsapp-web.js";
 import AppError from "../../errors/AppError";
 import { getWbot } from "../../libs/wbot";
-import { setOnlyAdminInfo } from "../../helpers/EditGroups";
+import { setOnlyAdminInfo } from "../../helpers/GetGroups";
 
 export interface ICreateGroup {
   title: string;

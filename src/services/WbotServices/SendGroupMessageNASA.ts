@@ -1,5 +1,5 @@
 import AppError from "../../errors/AppError";
-import { delay } from "../../helpers/EditGroups";
+import { delay } from "../../helpers/GetGroups";
 import { getWbot } from "../../libs/wbot";
 import { GetGroupsAdmin } from "./GetGroupsAdmin";
 
