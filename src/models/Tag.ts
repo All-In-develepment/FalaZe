@@ -1,17 +1,15 @@
 import {
   Table,
-  Column,
-  CreatedAt,
-  UpdatedAt,
   Model,
   PrimaryKey,
   AutoIncrement,
+  Column,
+  CreatedAt,
+  UpdatedAt,
   BelongsToMany,
-  ForeignKey,
-  BelongsTo,
-  HasMany
+  AllowNull,
+  Unique
 } from "sequelize-typescript";
-import Company from "./Company";
 import Ticket from "./Ticket";
 import TicketTag from "./TicketTag";
 
@@ -22,30 +20,27 @@ class Tag extends Model<Tag> {
   @Column
   id: number;
 
+  @AllowNull(false)
+  @Unique
   @Column
   name: string;
 
+  @AllowNull(false)
+  @Unique
   @Column
   color: string;
 
-  @HasMany(() => TicketTag)
-  ticketTags: TicketTag[];
-
-  @BelongsToMany(() => Ticket, () => TicketTag)
-  tickets: Ticket[];
-
-  @ForeignKey(() => Company)
   @Column
-  companyId: number;
-
-  @BelongsTo(() => Company)
-  company: Company;
+  description: string;
 
   @CreatedAt
   createdAt: Date;
 
   @UpdatedAt
   updatedAt: Date;
+
+  @BelongsToMany(() => Ticket, () => TicketTag)
+  tickets: Ticket[];
 }
 
 export default Tag;

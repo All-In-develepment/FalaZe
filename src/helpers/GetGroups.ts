@@ -2,7 +2,7 @@ import { GroupChat } from "whatsapp-web.js";
 import { getWbot } from "../libs/wbot";
 import AppError from "../errors/AppError";
 
-export const editGroups = async (
+export const getChats = async (
   ticketWhatsappId: number
 ): Promise<GroupChat[]> => {
   const wbot = getWbot(ticketWhatsappId);

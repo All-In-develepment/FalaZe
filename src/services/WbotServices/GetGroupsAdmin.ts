@@ -1,5 +1,5 @@
 import { GroupChat } from "whatsapp-web.js";
-import { editGroups } from "../../helpers/EditGroups";
+import { getChats } from "../../helpers/GetGroups";
 import { getWbot } from "../../libs/wbot";
 
 export const GetGroupsAdmin = async (
@@ -8,7 +8,7 @@ export const GetGroupsAdmin = async (
   const wbot = getWbot(ticketWhatsappId);
   const userNumber = wbot.info.wid.user;
 
-  const groupsChat = await editGroups(ticketWhatsappId);
+  const groupsChat = await getChats(ticketWhatsappId);
 
   const owner = groupsChat.filter(groupChat =>
     groupChat.participants.some(
