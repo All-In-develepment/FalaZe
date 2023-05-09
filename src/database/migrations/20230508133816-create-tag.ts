@@ -12,12 +12,12 @@ module.exports = {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: false
       },
       color: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: false
       },
       description: {
         type: DataTypes.TEXT

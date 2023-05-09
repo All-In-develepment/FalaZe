@@ -1,6 +1,4 @@
 import AppError from "../../errors/AppError";
-import { getChats } from "../../helpers/GetGroups";
-import GetTicketWbot from "../../helpers/GetTicketWbot";
 import Tag from "../../models/Tag";
 import Ticket from "../../models/Ticket";
 
@@ -13,16 +11,23 @@ export interface Tags {
 
 export const CreateTag = async ({
   ticket,
-  name = "",
-  color = "",
-  description = ""
+  name,
+  color,
+  description
 }: Tags): Promise<void> => {
   try {
-    const wbot = await GetTicketWbot(ticket);
-    const chats = await wbot.getChats();
-    console.log(wbot);
+    const { id, tagId } = ticket;
+    const oneTicket = await Ticket.findByPk(id);
+    const oneTag = await Tag.findByPk(tagId);
 
-    const tag = Tag.findByPk();
+    if (!tagId) {
+      await oneTicket?.$create("tag", {
+        name,
+        color,
+        description
+      });
+    }
+    await oneTag?.update({ name, color, description });
   } catch (error) {
     throw new AppError("ERR_CHANGING_WAPP_GROUP");
   }

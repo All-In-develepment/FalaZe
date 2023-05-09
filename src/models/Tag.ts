@@ -7,8 +7,7 @@ import {
   CreatedAt,
   UpdatedAt,
   BelongsToMany,
-  AllowNull,
-  Unique
+  AllowNull
 } from "sequelize-typescript";
 import Ticket from "./Ticket";
 import TicketTag from "./TicketTag";
@@ -21,12 +20,10 @@ class Tag extends Model<Tag> {
   id: number;
 
   @AllowNull(false)
-  @Unique
   @Column
   name: string;
 
   @AllowNull(false)
-  @Unique
   @Column
   color: string;
 
