@@ -18,6 +18,7 @@ const messages = {
         },
       },
       login: {
+        appTitle: "FalaZe",
         title: "Login",
         form: {
           email: "Email",
