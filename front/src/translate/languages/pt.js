@@ -144,10 +144,36 @@ const messages = {
           actions: "Ações",
         },
       },
-      contactModal: {
+      labels:{
+        title: "Etiquetas",
+        toasts: {
+          create: "Etiqueta criada com sucesso",
+          delete: "Etiqueta excluída com sucesso",
+          update: "Etiquete atualizada com sucesso"
+        },
+        searchPlaceholder: "Pesquisar...",
+        confirmationModal: {
+          deleteTitle: "Deletar ",
+          importTitlte: "Importar contatos",
+          deleteMessage:
+            "Tem certeza que deseja deletar esta etiqueta?",
+          importMessage: "Deseja importas todos os contatos do telefone?",
+        },
+        buttons: {
+          import: "Importar Contatos",
+          add: "Adicionar Etiqueta",
+        },
+        table: {
+          name: "Nome",
+          collor: "Cor",
+          description: "Descrição",
+          actions: "Ações",
+        },
+      },
+      labelModal: {
         title: {
-          add: "Adicionar contato",
-          edit: "Editar contato",
+          add: "Adicionar",
+          edit: "Editar",
         },
         form: {
           mainInfo: "Dados do contato",
@@ -291,6 +317,7 @@ const messages = {
           administration: "Administração",
           users: "Usuários",
           settings: "Configurações",
+          lable: "Etiqueta",
         },
         appBar: {
           user: {
