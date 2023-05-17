@@ -5,6 +5,7 @@ dist
 .env
 .env.test
 data/db
+.wwebjs_auth
 
 package-lock.json
 yarn.lock
