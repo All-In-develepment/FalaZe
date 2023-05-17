@@ -12,6 +12,8 @@ import {
   MenuItem,
   IconButton,
   Menu,
+  useTheme,
+  useMediaQuery,
 } from "@material-ui/core";
 
 import MenuIcon from "@material-ui/icons/Menu";
@@ -24,8 +26,14 @@ import UserModal from "../components/UserModal";
 import { AuthContext } from "../context/Auth/AuthContext";
 import BackdropLoading from "../components/BackdropLoading";
 import { i18n } from "../translate/i18n";
+import toastError from "../errors/toastError";
+import AnnouncementsPopover from "../components/AnnouncementsPopover";
 
-const drawerWidth = 240;
+import logo1 from "../assets/logo1.png";
+import { socketConnection } from "../services/socket";
+import ChatPopover from "../pages/Chat/ChatPopover";
+
+const drawerWidth = 300;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,11 +50,13 @@ const useStyles = makeStyles((theme) => ({
   toolbarIcon: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
     padding: "0 8px",
     minHeight: "48px",
+    color: "gray"
   },
   appBar: {
+    
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
@@ -69,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    fontSize: 14,
   },
   drawerPaper: {
     position: "relative",
@@ -96,6 +107,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flex: 1,
     overflow: "auto",
+    ...theme.scrollbarStyles,
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -106,6 +118,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     overflow: "auto",
     flexDirection: "column",
+  },
+  containerWithScroll: {
+    flex: 1,
+    padding: theme.spacing(1),
+    overflowY: "scroll",
+    ...theme.scrollbarStyles,
   },
 }));
 
@@ -118,6 +136,9 @@ const LoggedInLayout = ({ children }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [drawerVariant, setDrawerVariant] = useState("permanent");
   const { user } = useContext(AuthContext);
+
+  const theme = useTheme();
+  const greaterThenSm = useMediaQuery(theme.breakpoints.up("sm"));
 
   useEffect(() => {
     if (document.body.offsetWidth > 600) {
@@ -132,6 +153,34 @@ const LoggedInLayout = ({ children }) => {
       setDrawerVariant("permanent");
     }
   }, [drawerOpen]);
+
+  useEffect(() => {
+    const companyId = localStorage.getItem("companyId");
+    const userId = localStorage.getItem("userId");
+
+    const socket = socketConnection({ companyId });
+
+    socket.on(`company-${companyId}-auth`, (data) => {
+      if (data.user.id === +userId) {
+        toastError("Sua conta foi acessada em outro computador.");
+        setTimeout(() => {
+          localStorage.clear();
+          window.location.reload();
+        }, 1000);
+      }
+    });
+
+    socket.emit("userStatus");
+    const interval = setInterval(() => {
+      socket.emit("userStatus");
+    }, 1000 * 60 * 5);
+
+    return () => {
+      socket.disconnect();
+      clearInterval(interval);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -177,12 +226,13 @@ const LoggedInLayout = ({ children }) => {
         open={drawerOpen}
       >
         <div className={classes.toolbarIcon}>
+          <img src={logo1} style={{ margin: "0 auto" , width: "70%"}} alt="logo1" />
           <IconButton onClick={() => setDrawerOpen(!drawerOpen)}>
             <ChevronLeftIcon />
           </IconButton>
         </div>
         <Divider />
-        <List>
+        <List className={classes.containerWithScroll}>
           <MainListItems drawerClose={drawerClose} />
         </List>
         <Divider />
@@ -195,12 +245,12 @@ const LoggedInLayout = ({ children }) => {
       <AppBar
         position="absolute"
         className={clsx(classes.appBar, drawerOpen && classes.appBarShift)}
-        color={process.env.NODE_ENV === "development" ? "inherit" : "primary"}
+        color="primary"
       >
         <Toolbar variant="dense" className={classes.toolbar}>
           <IconButton
             edge="start"
-            color="inherit"
+            variant="contained"
             aria-label="open drawer"
             onClick={() => setDrawerOpen(!drawerOpen)}
             className={clsx(
@@ -213,13 +263,23 @@ const LoggedInLayout = ({ children }) => {
           <Typography
             component="h1"
             variant="h6"
-            color="inherit"
+            color="#FFFFFF"
             noWrap
             className={classes.title}
           >
-            Fala Zé
+            {greaterThenSm ? (
+              <>
+                Olá <b>{user.name}</b>, Seja bem-vindo.
+              </>
+            ) : (
+              user.name
+            )}
           </Typography>
           {user.id && <NotificationsPopOver />}
+
+          <AnnouncementsPopover />
+
+          <ChatPopover />
 
           <div>
             <IconButton
@@ -227,7 +287,8 @@ const LoggedInLayout = ({ children }) => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleMenu}
-              color="inherit"
+              variant="contained"
+
             >
               <AccountCircle />
             </IconButton>
