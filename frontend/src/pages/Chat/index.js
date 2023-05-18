@@ -127,10 +127,10 @@ export function ChatModal({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={handleClose} color="secondary">
           Fechar
         </Button>
-        <Button onClick={handleSave} color="primary" variant="contained">
+        <Button onClick={handleSave} color="secondary" variant="contained">
           Salvar
         </Button>
       </DialogActions>

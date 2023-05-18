@@ -322,7 +322,7 @@ const Connections = () => {
 						yes={() => (
 							<Button
 								variant="contained"
-								color="primary"
+								color="secondary"
 								onClick={handleOpenWhatsAppModal}
 							>
 								{i18n.t("connections.buttons.add")}

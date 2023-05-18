@@ -253,7 +253,7 @@ const Announcements = () => {
                   fullWidth
                   variant="contained"
                   onClick={handleOpenAnnouncementModal}
-                  color="primary"
+                  color="secondary"
                 >
                   {i18n.t("announcements.buttons.add")}
                 </Button>

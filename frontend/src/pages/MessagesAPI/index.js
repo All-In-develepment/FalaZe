@@ -147,7 +147,7 @@ const MessagesAPI = () => {
               <Grid item xs={12} className={classes.textRight}>
                 <Button
 									type="submit"
-									color="primary"
+									color="secondary"
 									variant="contained"
 									className={classes.btnWrapper}
 								>
@@ -218,7 +218,7 @@ const MessagesAPI = () => {
               <Grid item xs={12} className={classes.textRight}>
                 <Button
 									type="submit"
-									color="primary"
+									color="secondary"
 									variant="contained"
 									className={classes.btnWrapper}
 								>

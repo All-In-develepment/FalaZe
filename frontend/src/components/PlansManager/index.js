@@ -167,7 +167,7 @@ export function PlanManagerForm(props) {
                                     </Grid>
                                 ) : null}
                                 <Grid xs={4} md={1} item>
-                                    <ButtonWithSpinner className={classes.fullWidth} loading={loading} type="submit" variant="contained" color="primary">
+                                    <ButtonWithSpinner className={classes.fullWidth} loading={loading} type="submit" variant="contained" color="secondary">
                                         Salvar
                                     </ButtonWithSpinner>
                                 </Grid>

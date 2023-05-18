@@ -197,6 +197,8 @@ const NotificationsPopOver = () => {
         ref={anchorEl}
         aria-label="Mostrar Notificações"
         variant="contained"
+        color="secondary"
+        
 
       >
           <ChatIcon />

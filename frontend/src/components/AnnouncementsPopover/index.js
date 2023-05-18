@@ -33,6 +33,11 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     overflowY: "scroll",
     ...theme.scrollbarStyles,
+    
+  },
+
+  buttonBG:{
+    color: '#D9D9D9'
   },
 }));
 
@@ -45,7 +50,7 @@ function AnnouncementDialog({ announcement, open, handleClose }) {
       open={open}
       onClose={() => handleClose()}
       aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
+      aria-describedby="alert-dialog-description"      
     >
       <DialogTitle id="alert-dialog-title">{announcement.title}</DialogTitle>
       <DialogContent>
@@ -240,6 +245,10 @@ export default function AnnouncementsPopover() {
         variant="contained"
         aria-describedby={id}
         onClick={handleClick}
+        color="secondary"
+        /*className={(
+          classes.buttonBG
+        )}*/
       >
         <Badge
           color="secondary"

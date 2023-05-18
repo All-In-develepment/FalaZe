@@ -31,11 +31,11 @@ const useStyles = makeStyles((theme) => ({
     height: 240,
   },
   tab: {
-    background: "#f2f5f3",
+    background: "#e6e8eb",
     borderRadius: 4,
     width: "100%",
     "& .MuiTab-wrapper": {
-      color: "#128c7e"
+      color: "#081C34"
     },
     "& .MuiTabs-flexContainer": {
       justifyContent: "center"

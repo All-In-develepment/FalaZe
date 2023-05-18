@@ -35,7 +35,7 @@ const LocationPreview = ({ image, link, description }) => {
 						<Divider />
 						<Button
 							fullWidth
-							color="primary"
+							color="secondary"
 							onClick={handleLocation}
 							disabled={!link}
 						>Visualizar</Button>

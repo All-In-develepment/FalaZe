@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
 	},
 
 	buttonProgress: {
-		color: green[500],
+		color: "#B4C2FF",
 		position: "absolute",
 		top: "50%",
 		left: "50%",

@@ -280,14 +280,14 @@ const Contacts = () => {
           />
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             onClick={(e) => setConfirmOpen(true)}
           >
             {i18n.t("contacts.buttons.import")}
           </Button>
           <Button
             variant="contained"
-            color="primary"
+            color="secondary"
             onClick={handleOpenContactModal}
           >
             {i18n.t("contacts.buttons.add")}
