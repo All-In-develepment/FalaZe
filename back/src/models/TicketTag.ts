@@ -1,9 +1,19 @@
-import { Table, Model, ForeignKey, Column } from "sequelize-typescript";
-import Ticket from "./Ticket";
+import {
+  Table,
+  Column,
+  CreatedAt,
+  UpdatedAt,
+  Model,
+  ForeignKey,
+  BelongsTo
+} from "sequelize-typescript";
 import Tag from "./Tag";
+import Ticket from "./Ticket";
 
-@Table
-class TicketTag extends Model {
+@Table({
+  tableName: 'TicketTags'
+})
+class TicketTag extends Model<TicketTag> {
   @ForeignKey(() => Ticket)
   @Column
   ticketId: number;
@@ -11,6 +21,18 @@ class TicketTag extends Model {
   @ForeignKey(() => Tag)
   @Column
   tagId: number;
+
+  @CreatedAt
+  createdAt: Date;
+
+  @UpdatedAt
+  updatedAt: Date;
+
+  @BelongsTo(() => Ticket)
+  ticket: Ticket;
+
+  @BelongsTo(() => Tag)
+  tag: Tag;
 }
 
 export default TicketTag;

@@ -1,9 +1,22 @@
-import { Router } from "express";
+import express from "express";
+import isAuth from "../middleware/isAuth";
 
 import * as TagController from "../controllers/TagController";
 
-const tagsRoutes = Router();
+const tagRoutes = express.Router();
 
-tagsRoutes.post("/createTag/:ticketId", TagController.createTag);
+tagRoutes.get("/tags/list", isAuth, TagController.list);
 
-export default tagsRoutes;
+tagRoutes.get("/tags", isAuth, TagController.index);
+
+tagRoutes.post("/tags", isAuth, TagController.store);
+
+tagRoutes.put("/tags/:tagId", isAuth, TagController.update);
+
+tagRoutes.get("/tags/:tagId", isAuth, TagController.show);
+
+tagRoutes.delete("/tags/:tagId", isAuth, TagController.remove);
+
+tagRoutes.post("/tags/sync", isAuth, TagController.syncTags);
+
+export default tagRoutes;
