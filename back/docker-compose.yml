@@ -72,4 +72,5 @@ networks:
     name: db_pg_network
   proxy_manager:
     name: proxy_manager
+    external: true
 
