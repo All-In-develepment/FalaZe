@@ -14,8 +14,6 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-    networks:
-      - db_pg_network
   redis-stack:
     image: redis/redis-stack:latest
     restart: always
@@ -23,7 +21,6 @@ services:
       REDIS_PASSWORD: "123456"
     ports:
       - "6379:6379"
-      - "8001:8001"
     volumes:
       - redis:/var/lib/redis
   backend:
@@ -39,9 +36,6 @@ services:
       - '${PORT}:8080'
     volumes:
       - .:/usr/src/app
-    networks:
-      - db_pg_network
-      - proxy_manager
   frontend:
     build:
       context: ../front/.
@@ -54,8 +48,6 @@ services:
       - '3000:3000'
     volumes:
       - ../front/.:/usr/src/app
-    networks:
-      - proxy_manager
     stdin_open: true
     tty: true
 
@@ -66,11 +58,3 @@ volumes:
     name: backend
   redis:
     name: redis
-
-networks:
-  db_pg_network:
-    name: db_pg_network
-  proxy_manager:
-    name: proxy_manager
-    external: true
-

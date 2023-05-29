@@ -4629,20 +4629,21 @@ const wbotMessageListener = async (
       });
 
       // comunicação com o n8n atraves do webhook
-      axios({
-        method: "POST",
-        url: "https://webhook.com.br",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        data: messages
-      })
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          throw new Error(error);
-        });
+      // const url = "https://n8n.dende.tech/";
+      // axios({
+      //   method: "POST",
+      //   url: `${url}webhook-test/7b63c5c0-7fda-4f03-8cf5-0de9cf748399`,
+      //   headers: {
+      //     "Content-Type": "application/json"
+      //   },
+      //   data: messages
+      // })
+      //   .then(response => {
+      //     console.log(response.data);
+      //   })
+      //   .catch(error => {
+      //     throw new Error(error);
+      //   });
     });
 
     wbot.ev.on("messages.update", (messageUpdate: WAMessageUpdate[]) => {

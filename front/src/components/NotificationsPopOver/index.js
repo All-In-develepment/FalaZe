@@ -11,6 +11,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import Badge from "@material-ui/core/Badge";
+import { withStyles } from "@material-ui/core/styles";
 import ChatIcon from "@material-ui/icons/Chat";
 
 import TicketListItem from "../TicketListItem";
@@ -40,6 +41,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const CustomBadge = withStyles((theme) => ({
+  badge: {
+    backgroundColor: "#9B2222",
+    color: "#fff",
+  },
+}))(Badge);
+
 const NotificationsPopOver = () => {
   const classes = useStyles();
 
@@ -60,23 +68,23 @@ const NotificationsPopOver = () => {
 
   const historyRef = useRef(history);
 
-	useEffect(() => {
-		soundAlertRef.current = play;
+  useEffect(() => {
+    soundAlertRef.current = play;
 
-		if (!("Notification" in window)) {
-			console.log("This browser doesn't support notifications");
-		} else {
-			Notification.requestPermission();
-		}
-	}, [play]);
+    if (!("Notification" in window)) {
+      console.log("This browser doesn't support notifications");
+    } else {
+      Notification.requestPermission();
+    }
+  }, [play]);
 
-	useEffect(() => {
-		setNotifications(tickets);
-	}, [tickets]);
+  useEffect(() => {
+    setNotifications(tickets);
+  }, [tickets]);
 
-	useEffect(() => {
-		ticketIdRef.current = ticketIdUrl;
-	}, [ticketIdUrl]);
+  useEffect(() => {
+    ticketIdRef.current = ticketIdUrl;
+  }, [ticketIdUrl]);
 
   useEffect(() => {
     const companyId = localStorage.getItem("companyId");
@@ -88,54 +96,58 @@ const NotificationsPopOver = () => {
 
     socket.on(`company-${companyId}-ticket`, (data) => {
       if (data.action === "updateUnread" || data.action === "delete") {
-				setNotifications(prevState => {
-					const ticketIndex = prevState.findIndex(t => t.id === data.ticketId);
-					if (ticketIndex !== -1) {
-						prevState.splice(ticketIndex, 1);
-						return [...prevState];
-					}
-					return prevState;
-				});
+        setNotifications((prevState) => {
+          const ticketIndex = prevState.findIndex(
+            (t) => t.id === data.ticketId
+          );
+          if (ticketIndex !== -1) {
+            prevState.splice(ticketIndex, 1);
+            return [...prevState];
+          }
+          return prevState;
+        });
 
-				setDesktopNotifications(prevState => {
-					const notfiticationIndex = prevState.findIndex(
-						n => n.tag === String(data.ticketId)
-					);
-					if (notfiticationIndex !== -1) {
-						prevState[notfiticationIndex].close();
-						prevState.splice(notfiticationIndex, 1);
-						return [...prevState];
-					}
-					return prevState;
-				});
+        setDesktopNotifications((prevState) => {
+          const notfiticationIndex = prevState.findIndex(
+            (n) => n.tag === String(data.ticketId)
+          );
+          if (notfiticationIndex !== -1) {
+            prevState[notfiticationIndex].close();
+            prevState.splice(notfiticationIndex, 1);
+            return [...prevState];
+          }
+          return prevState;
+        });
       }
     });
 
     socket.on(`company-${companyId}-appMessage`, (data) => {
-			if (
-				data.action === "create" &&
-				!data.message.read &&
-				(data.ticket.userId === user?.id || !data.ticket.userId)
-			) {
-				setNotifications(prevState => {
-					const ticketIndex = prevState.findIndex(t => t.id === data.ticket.id);
-					if (ticketIndex !== -1) {
-						prevState[ticketIndex] = data.ticket;
-						return [...prevState];
-					}
-					return [data.ticket, ...prevState];
-				});
+      if (
+        data.action === "create" &&
+        !data.message.read &&
+        (data.ticket.userId === user?.id || !data.ticket.userId)
+      ) {
+        setNotifications((prevState) => {
+          const ticketIndex = prevState.findIndex(
+            (t) => t.id === data.ticket.id
+          );
+          if (ticketIndex !== -1) {
+            prevState[ticketIndex] = data.ticket;
+            return [...prevState];
+          }
+          return [data.ticket, ...prevState];
+        });
 
-				const shouldNotNotificate =
-					(data.message.ticketId === ticketIdRef.current &&
-						document.visibilityState === "visible") ||
-					(data.ticket.userId && data.ticket.userId !== user?.id) ||
-					data.ticket.isGroup;
+        const shouldNotNotificate =
+          (data.message.ticketId === ticketIdRef.current &&
+            document.visibilityState === "visible") ||
+          (data.ticket.userId && data.ticket.userId !== user?.id) ||
+          data.ticket.isGroup;
 
-				if (shouldNotNotificate) return;
+        if (shouldNotNotificate) return;
 
-				handleNotifications(data);
-			}
+        handleNotifications(data);
+      }
     });
 
     return () => {
@@ -198,12 +210,10 @@ const NotificationsPopOver = () => {
         aria-label="Mostrar Notificações"
         variant="contained"
         color="secondary"
-        
-
       >
+        <CustomBadge badgeContent={notifications.length}>
           <ChatIcon />
-        {/* <Badge badgeContent={notifications.length} color="secondary">
-        </Badge> */}
+        </CustomBadge>
       </IconButton>
       <Popover
         disableScrollLock

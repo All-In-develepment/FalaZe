@@ -116,7 +116,6 @@ export const send = async (req: Request, res: Response): Promise<Response> => {
     const body = messageData.body;
 
     const companyId = whatsapp.companyId;
-    // console.log({ numberToTest, body, companyId });
 
     const CheckValidNumber = await CheckContactNumber(numberToTest, companyId);
     const number = CheckValidNumber.jid.replace(/\D/g, "");

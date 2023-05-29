@@ -8,7 +8,6 @@ interface IOnWhatsapp {
 
 const checker = async (number: string, wbot: any) => {
   const [validNumber] = await wbot.onWhatsApp(`${number}@s.whatsapp.net`);
-  console.log(validNumber);
 
   return validNumber;
 };
@@ -20,7 +19,6 @@ const CheckContactNumber = async (
   const defaultWhatsapp = await GetDefaultWhatsApp(companyId);
 
   const wbot = getWbot(defaultWhatsapp.id);
-  console.log("mozovo", wbot);
   const isNumberExit = await checker(number, wbot);
 
   if (!isNumberExit.exists) {
