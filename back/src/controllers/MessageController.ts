@@ -14,7 +14,7 @@ import DeleteWhatsAppMessage from "../services/WbotServices/DeleteWhatsAppMessag
 import SendWhatsAppMedia from "../services/WbotServices/SendWhatsAppMedia";
 import SendWhatsAppMessage from "../services/WbotServices/SendWhatsAppMessage";
 import CheckContactNumber from "../services/WbotServices/CheckNumber";
-import CheckIsValidContact from "../services/WbotServices/CheckIsValidContact";
+import CreateInfoAPIExternal from "../helpers/CreateInfoAPIExternal";
 
 type IndexQuery = {
   pageNumber: string;
@@ -151,6 +151,8 @@ export const send = async (req: Request, res: Response): Promise<Response> => {
         { removeOnComplete: false, attempts: 3 }
       );
     }
+
+    await CreateInfoAPIExternal({ number, companyId, whatsappId, body });
 
     return res.send({ mensagem: "Mensagem enviada" });
   } catch (err: any) {

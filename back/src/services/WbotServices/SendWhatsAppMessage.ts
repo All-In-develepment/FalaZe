@@ -1,5 +1,5 @@
 import { WAMessage } from "@adiwajshing/baileys";
-import WALegacySocket from "@adiwajshing/baileys"
+import WALegacySocket from "@adiwajshing/baileys";
 import * as Sentry from "@sentry/node";
 import AppError from "../../errors/AppError";
 import GetTicketWbot from "../../helpers/GetTicketWbot";
@@ -24,31 +24,33 @@ const SendWhatsAppMessage = async ({
   const number = `${ticket.contact.number}@${
     ticket.isGroup ? "g.us" : "s.whatsapp.net"
   }`;
+
   if (quotedMsg) {
-      const chatMessages = await Message.findOne({
-        where: {
-          id: quotedMsg.id
-        }
-      });
-
-      if (chatMessages) {
-        const msgFound = JSON.parse(chatMessages.dataJson);
-
-        options = {
-          quoted: {
-            key: msgFound.key,
-            message: {
-              extendedTextMessage: msgFound.message.extendedTextMessage
-            }
-          }
-        };
+    const chatMessages = await Message.findOne({
+      where: {
+        id: quotedMsg.id
       }
-      console.log(chatMessages)
-    
+    });
+
+    if (chatMessages) {
+      const msgFound = JSON.parse(chatMessages.dataJson);
+
+      options = {
+        quoted: {
+          key: msgFound.key,
+          message: {
+            extendedTextMessage: msgFound.message.extendedTextMessage
+          }
+        }
+      };
+    }
+    console.log(chatMessages);
   }
 
   try {
-    const sentMessage = await wbot.sendMessage(number,{
+    const sentMessage = await wbot.sendMessage(
+      number,
+      {
         text: formatBody(body, ticket.contact)
       },
       {

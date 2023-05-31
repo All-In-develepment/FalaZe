@@ -21,6 +21,7 @@ const CreateTicketService = async ({
   companyId
 }: Request): Promise<Ticket> => {
   const defaultWhatsapp = await GetDefaultWhatsApp(companyId);
+  console.log({ contactId, status, userId });
 
   await CheckContactOpenTickets(contactId);
 
@@ -42,7 +43,13 @@ const CreateTicketService = async ({
   });
 
   await Ticket.update(
-    { companyId, queueId, userId, whatsappId: defaultWhatsapp.id, status: "open" },
+    {
+      companyId,
+      queueId,
+      userId,
+      whatsappId: defaultWhatsapp.id,
+      status: "open"
+    },
     { where: { id } }
   );
 

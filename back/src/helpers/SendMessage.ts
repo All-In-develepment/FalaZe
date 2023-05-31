@@ -3,6 +3,9 @@ import GetWhatsappWbot from "./GetWhatsappWbot";
 import fs from "fs";
 
 import { getMessageOptions } from "../services/WbotServices/SendWhatsAppMedia";
+import { verifyMessage } from "../services/WbotServices/wbotMessageListener";
+import Contact from "../models/Contact";
+import Ticket from "../models/Ticket";
 
 export type MessageData = {
   number: number | string;
@@ -35,6 +38,12 @@ export const SendMessage = async (
       const body = `\u200e${messageData.body}`;
       message = await wbot.sendMessage(chatId, { text: body });
     }
+    const contact = await Contact.findOne({
+      where: { number: messageData.number }
+    });
+    const ticket = await Ticket.findOne({ where: { contactId: contact.id } });
+
+    await verifyMessage(message, ticket, contact);
 
     return message;
   } catch (err: any) {
