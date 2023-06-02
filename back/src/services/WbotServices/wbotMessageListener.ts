@@ -4570,7 +4570,7 @@ const verifyCampaignMessageAndCloseTicket = async (
       where: { id: message.key.id!, companyId }
     });
     const ticket = await Ticket.findByPk(messageRecord.ticketId);
-    await ticket.update({ status: "closed" });
+    await ticket.update({ status: "pending" });
 
     io.to("open").emit(`company-${ticket.companyId}-ticket`, {
       action: "delete",

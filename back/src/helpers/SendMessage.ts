@@ -6,11 +6,13 @@ import { getMessageOptions } from "../services/WbotServices/SendWhatsAppMedia";
 import { verifyMessage } from "../services/WbotServices/wbotMessageListener";
 import Contact from "../models/Contact";
 import Ticket from "../models/Ticket";
+import CreateInfoAPIExternal from "./CreateInfoAPIExternal";
 
 export type MessageData = {
-  number: number | string;
+  number: string;
   body: string;
   mediaPath?: string;
+  whatsappId?: number;
 };
 
 export const SendMessage = async (
@@ -40,6 +42,15 @@ export const SendMessage = async (
     }
     const contact = await Contact.findOne({
       where: { number: messageData.number }
+    });
+
+    const companyId = 1;
+    const { number, whatsappId, body } = messageData;
+    await CreateInfoAPIExternal({
+      number,
+      companyId,
+      whatsappId,
+      body
     });
     const ticket = await Ticket.findOne({ where: { contactId: contact.id } });
 

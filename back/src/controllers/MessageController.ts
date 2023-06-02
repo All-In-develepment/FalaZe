@@ -152,8 +152,6 @@ export const send = async (req: Request, res: Response): Promise<Response> => {
       );
     }
 
-    await CreateInfoAPIExternal({ number, companyId, whatsappId, body });
-
     return res.send({ mensagem: "Mensagem enviada" });
   } catch (err: any) {
     if (Object.keys(err).length === 0) {

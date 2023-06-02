@@ -1,8 +1,8 @@
 import Contact from "../models/Contact";
 import Ticket from "../models/Ticket";
 import CreateContactService from "../services/ContactServices/CreateContactService";
-import CreateTicketService from "../services/TicketServices/CreateTicketService";
 import formatBody from "../helpers/Mustache";
+import FindOrCreateTicketService from "../services/TicketServices/FindOrCreateTicketService";
 
 interface Request {
   number: string;
@@ -27,18 +27,17 @@ const CreateInfoAPIExternal = async ({
       companyId
     });
   }
-
+  const unreadMessages = 0;
   let ticket = await Ticket.findOne({ where: { contactId: contact.id } });
 
-  if (!ticket) {
-    ticket = await CreateTicketService({
-      contactId: contact.id,
-      status: "pending",
-      userId: whatsappId,
-      companyId,
-      queueId: null
-    });
-  }
+  if (!ticket)
+    ticket = await FindOrCreateTicketService(
+      contact,
+      whatsappId,
+      unreadMessages,
+      companyId
+    );
+
   await ticket.update({ lastMessage: formatBody(body, ticket.contact) });
 };
 export default CreateInfoAPIExternal;
