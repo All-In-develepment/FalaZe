@@ -3,6 +3,8 @@
 import { QueryTypes } from "sequelize";
 import * as _ from "lodash";
 import sequelize from "../../database";
+import Tag from "../../models/Tag";
+import AppError from "../../errors/AppError";
 
 export interface DashboardData {
   counters: any;
@@ -13,6 +15,7 @@ export interface Params {
   days?: number;
   date_from?: string;
   date_to?: string;
+  tags?: string;
 }
 
 export default async function DashboardDataService(
@@ -43,13 +46,16 @@ export default async function DashboardDataService(
         ), 0) "waitTime",
         t.status,
         tt.*,
-        ct."id" "contactId"
+        ct."id" "contactId",
+        tags.id "tagId"
       from "TicketTraking" tt
       left join "Companies" c on c.id = tt."companyId"
       left join "Users" u on u.id = tt."userId"
       left join "Whatsapps" w on w.id = tt."whatsappId"
       left join "Tickets" t on t.id = tt."ticketId"
       left join "Contacts" ct on ct.id = t."contactId"
+      left join "TicketTags" ttg on ttg."ticketId" = t."id"
+      left join "Tags" tags on tags.id = ttg."tagId"
       -- filterPeriod
     ),
     counters as (
@@ -126,6 +132,16 @@ export default async function DashboardDataService(
   if (_.has(params, "date_to")) {
     where += ` and tt."finishedAt" <= ?`;
     replacements.push(`${params.date_to} 23:59:59`);
+  }
+
+  if (_.has(params, "tags")) {
+    try {
+      const { id } = await Tag.findOne({ where: { name: params.tags } });
+      where += ` and tags."id" = ${id}`;
+      replacements.push(parseInt(`${params.tags}`.replace(/\D/g, ""), 10));
+    } catch (error) {
+      throw new AppError("TAGNAME_NOT_FOUND");
+    }
   }
 
   replacements.push(companyId);
