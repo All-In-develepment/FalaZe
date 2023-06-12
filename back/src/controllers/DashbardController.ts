@@ -8,7 +8,6 @@ import DashboardDataService, {
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
   const params: Params = req.query;
-  // const params: Params = { tagName: "test2" };
   const { companyId } = req.user;
   let daysInterval = 3;
 
@@ -23,6 +22,6 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 export const dashBoardTag = async (req: Request, res: Response) => {
   const params: Params = req.query;
 
-  await DashBoardTagService(params.tagName);
-  return res.status(200);
+  const dashboardData = await DashBoardTagService(params);
+  return res.status(200).json(dashboardData);
 };

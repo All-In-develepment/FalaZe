@@ -2,11 +2,9 @@ import AppError from "../../errors/AppError";
 import Contact from "../../models/Contact";
 import Tag from "../../models/Tag";
 import TicketTag from "../../models/TicketTag";
+import { Params } from "./DashbardDataService";
 
-export const DashBoardTagService = async (tagName: string) => {
-  console.log({ tagName });
-  console.log("oi moanoite");
-
+export const DashBoardTagService = async ({ tagName }: Params) => {
   try {
     if (tagName) {
       const { id } = await Tag.findOne({ where: { name: tagName } });
@@ -21,6 +19,8 @@ export const DashBoardTagService = async (tagName: string) => {
           return contact.name;
         })
       );
+      console.log({ nameTicket });
+
       return nameTicket;
     }
     const ticketsTag = await TicketTag.findAll({ attributes: ["tagId"] });
@@ -28,6 +28,7 @@ export const DashBoardTagService = async (tagName: string) => {
     const ticketTagIds = ticketsTag.map(tag => tag.tagId);
     const tagsId = await Tag.findAll({ where: { id: ticketTagIds } });
     const name = tagsId.map(tag => tag.name);
+    console.log({ name });
 
     return name;
   } catch (error) {

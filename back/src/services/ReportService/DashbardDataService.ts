@@ -120,10 +120,6 @@ export default async function DashboardDataService(
       (select coalesce(json_agg(a.*), '[]')::jsonb from attedants a) attendants;
   `;
 
-  let queryTag = "";
-
-  const tagName = [];
-
   let where = 'where tt."companyId" = ?';
   const replacements: any[] = [companyId];
 
@@ -141,50 +137,6 @@ export default async function DashboardDataService(
     where += ` and tt."finishedAt" <= ?`;
     replacements.push(`${params.date_to} 23:59:59`);
   }
-
-  // try {
-  //   if (_.has(params, "tags")) {
-  //     const { id } = await Tag.findOne({ where: { name: params.tags } });
-  //     const ticketTag = await TicketTag.findAll({
-  //       where: { tagId: id }
-  //     });
-  //     const nameTicket = await Promise.all(
-  //       ticketTag.map(async tag => {
-  //         const contact = await Contact.findOne({
-  //           where: { id: tag.ticketId }
-  //         });
-  //         return contact.name;
-  //       })
-  //     );
-  //     console.log("aqui fora", nameTicket);
-
-  // console.log({ ticketId });
-
-  // const tickets = await Ticket.findAll({ where: { id: ticketId } });
-  // console.log(tickets);
-
-  // const contact = tickets.map(ticket => ticket.contactId);
-  // console.log(contact);
-
-  // const contactName = await Contact.findAll({where: {}})
-
-  // const ticketTag = await TicketTag.findAll({ attributes: ["tagId"] });
-  // const tagIds = ticketTag.map(tag => tag.tagId);
-  // const names = await Tag.findAll({ where: { id: tagIds } });
-
-  // console.log(names.map(name => name.name));
-
-  // where += ` and tags."id" = ${id}`;
-  // console.log(params.tags);
-
-  // replacements.push(params.tags);
-  // console.log({ replacements });
-  // }
-  // const tag = await Tag.findAll({attributes: ['name']})
-  // console.log(tag);
-  // } catch (error) {
-  //   throw new AppError("TAGNAME_NOT_FOUND");
-  // }
 
   replacements.push(companyId);
   replacements.push(companyId);
