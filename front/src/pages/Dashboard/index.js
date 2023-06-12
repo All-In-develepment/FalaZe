@@ -14,9 +14,9 @@ import SpeedIcon from "@material-ui/icons/Speed";
 import GroupIcon from "@material-ui/icons/Group";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import PersonIcon from "@material-ui/icons/Person";
-import TodayIcon from '@material-ui/icons/Today';
-import BlockIcon from '@material-ui/icons/Block';
-import DoneIcon from '@material-ui/icons/Done';
+import TodayIcon from "@material-ui/icons/Today";
+import BlockIcon from "@material-ui/icons/Block";
+import DoneIcon from "@material-ui/icons/Done";
 
 import { makeStyles } from "@material-ui/core/styles";
 import { grey, blue } from "@material-ui/core/colors";
@@ -87,7 +87,7 @@ const Dashboard = () => {
   );
   const [dateTo, setDateTo] = useState(moment().format("YYYY-MM-DD"));
   const [loading, setLoading] = useState(false);
-  const { find } = useDashboard();
+  const { find, findTag } = useDashboard();
   const { finding } = useCompanies();
   useEffect(() => {
     async function firstLoad() {
@@ -117,6 +117,7 @@ const Dashboard = () => {
     setLoading(true);
 
     let params = {};
+    let tagName = "test2";
 
     if (period > 0) {
       params = {
@@ -146,7 +147,7 @@ const Dashboard = () => {
 
     const data = await find(params);
 
-
+    await findTag({ tagName });
 
     setCounters(data.counters);
     if (isArray(data.attendants)) {
@@ -163,7 +164,7 @@ const Dashboard = () => {
       await loadCompanies();
     }
     fetchData();
-  }, [])
+  }, []);
   //let companyDueDate = localStorage.getItem("companyDueDate");
   //const companyDueDate = localStorage.getItem("companyDueDate").toString();
   const companyId = localStorage.getItem("companyId");
