@@ -5,6 +5,7 @@ import TicketTag from "../../models/TicketTag";
 
 export const DashBoardTagService = async (tagName: string) => {
   console.log({ tagName });
+  console.log("oi moanoite");
 
   try {
     if (tagName) {
