@@ -18,7 +18,7 @@ import {
   BinaryNode,
   WAMessageStubType,
   WAMessageUpdate
-} from "@adiwajshing/baileys";
+} from "@whiskeysockets/baileys";
 import Contact from "../../models/Contact";
 import Ticket from "../../models/Ticket";
 import Message from "../../models/Message";
@@ -4571,6 +4571,7 @@ const verifyCampaignMessageAndCloseTicket = async (
     });
     const ticket = await Ticket.findByPk(messageRecord.ticketId);
     await ticket.update({ status: "pending" });
+    if (ticket.userId) await ticket.update({ userId: null });
 
     io.to("open").emit(`company-${ticket.companyId}-ticket`, {
       action: "delete",

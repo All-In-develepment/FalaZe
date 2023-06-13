@@ -19,7 +19,6 @@ export const DashBoardTagService = async ({ tagName }: Params) => {
           return contact.name;
         })
       );
-      console.log({ nameTicket });
 
       return nameTicket;
     }
@@ -28,7 +27,6 @@ export const DashBoardTagService = async ({ tagName }: Params) => {
     const ticketTagIds = ticketsTag.map(tag => tag.tagId);
     const tagsId = await Tag.findAll({ where: { id: ticketTagIds } });
     const name = tagsId.map(tag => tag.name);
-    console.log({ name });
 
     return name;
   } catch (error) {
