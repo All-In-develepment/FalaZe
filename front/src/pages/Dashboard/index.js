@@ -158,10 +158,8 @@ const Dashboard = () => {
 
     if (!tagName){
       params = { tagName }
-      const dataTag = ["over", "casa", "home"];
-      //const dataTag = await findTag(params);
+      const dataTag = await findTag(params);
       setStateTag(dataTag);
-      console.log(dataTag);
     }
 
     console.log(tagName);
