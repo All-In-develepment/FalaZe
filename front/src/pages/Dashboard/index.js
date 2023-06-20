@@ -89,9 +89,10 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const { find, findTag } = useDashboard();
   const { finding } = useCompanies();
-  const [ tagName, setTagName ] = useState("");
-  const [ stateTag, setStateTag ] = useState([]);
-  
+  const [tagName, setTagName] = useState("");
+  const [stateTag, setStateTag] = useState([]);
+  const [filterTag, setfilterTag] = useState();
+
   useEffect(() => {
     async function firstLoad() {
       await fetchData();
@@ -107,7 +108,7 @@ const Dashboard = () => {
     setPeriod(value);
   }
 
-  async function handleChangeFilterType(value) {    
+  async function handleChangeFilterType(value) {
     setFilterType(value);
     if (value === 1) {
       setPeriod(0);
@@ -118,6 +119,7 @@ const Dashboard = () => {
   }
 
   async function handleChangeTagName(value) {
+    setfilterTag(value);
     console.log(value);
     setTagName(value);
   }
@@ -155,15 +157,13 @@ const Dashboard = () => {
 
     const data = await find(params);
 
-
-    if (!tagName){
-      params = { tagName }
+    if (!tagName) {
+      params = { tagName };
       const dataTag = await findTag(params);
       setStateTag(dataTag);
     }
 
     console.log(tagName);
-
 
     setCounters(data.counters);
     if (isArray(data.attendants)) {
@@ -291,25 +291,29 @@ const Dashboard = () => {
             </FormControl>
           </Grid>
 
-          {stateTag.length > 0?
-
-          
-
-
-          <Grid item xs={12} sm={6} md={4}>
-            <FormControl className={classes.selectContainer}>
-              <InputLabel id="tag-selector-label">Filtrar por tags</InputLabel>
-              <Select
-                labelId="tag-selector-label"
-                value={filterType}
-                onChange={(e) => handleChangeTagName(e.target.value)}
-              >
-                {stateTag.map(state => <MenuItem>{state}</MenuItem>)}                
-              </Select>
-              <FormHelperText>Selecione a tag desejada</FormHelperText>
-            </FormControl>
-          </Grid>: <Grid item xs={12} sm={6} md={4}>Nenhuma tag cadastrada</Grid>
-          }
+          {stateTag.length > 0 ? (
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl className={classes.selectContainer}>
+                <InputLabel id="tag-selector-label">
+                  Filtrar por tags
+                </InputLabel>
+                <Select
+                  labelId="tag-selector-label"
+                  value={filterTag}
+                  onChange={(e) => handleChangeTagName(e.target.value)}
+                >
+                  {stateTag.map((state, index) => (
+                    <MenuItem value={index}>{state}</MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>Selecione a tag desejada</FormHelperText>
+              </FormControl>
+            </Grid>
+          ) : (
+            <Grid item xs={12} sm={6} md={4}>
+              Nenhuma tag cadastrada
+            </Grid>
+          )}
 
           {renderFilters()}
 
