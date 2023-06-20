@@ -1,5 +1,5 @@
-import { proto, WASocket } from "@adiwajshing/baileys";
-import WALegacySocket from "@adiwajshing/baileys"
+import { proto, WASocket } from "@whiskeysockets/baileys";
+import WALegacySocket from "@whiskeysockets/baileys";
 import { getIO } from "../libs/socket";
 import Message from "../models/Message";
 import Ticket from "../models/Ticket";
@@ -30,7 +30,7 @@ const SetTicketMessagesAsRead = async (ticket: Ticket): Promise<void> => {
       const key = {
         remoteJid: getJsonMessage[0].remoteJid,
         id: getJsonMessage[0].id
-      }
+      };
 
       await (wbot as WASocket).readMessages([key]);
       await ticket.update({ unreadMessages: 0 });
@@ -56,7 +56,6 @@ const SetTicketMessagesAsRead = async (ticket: Ticket): Promise<void> => {
                 }
               }); */
     }
-
 
     await Message.update(
       { read: true },

@@ -1,4 +1,4 @@
-import { WAMessage, AnyMessageContent } from "@adiwajshing/baileys";
+import { WAMessage, AnyMessageContent } from "@whiskeysockets/baileys";
 import * as Sentry from "@sentry/node";
 import fs from "fs";
 import { exec } from "child_process";
@@ -152,7 +152,7 @@ const SendWhatsAppMedia = async ({
         fileName: media.originalname,
         mimetype: media.mimetype
       };
-     } else if (typeMessage === "application") {
+    } else if (typeMessage === "application") {
       options = {
         document: fs.readFileSync(pathMedia),
         caption: body,
