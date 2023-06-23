@@ -65,7 +65,6 @@ const Report = () => {
   const [date_to, setDate_to] = useState(moment().format("YYYY-MM-DD"));
 
   async function handleChangeTagName(value) {
-    console.log(value);
     // getNumberTags(value)
     setTagName(value);
   }
@@ -92,7 +91,6 @@ const Report = () => {
 
     if (tagName.toLowerCase() !== "todos") {
       const tag = await getNumberTags({ date_from, date_to, tagName });
-      console.log("o valor da tag", tag);
       setTagNumber(tag);
     }
 
