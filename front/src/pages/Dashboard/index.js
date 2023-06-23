@@ -91,7 +91,6 @@ const Dashboard = () => {
   const { finding } = useCompanies();
   const [tagName, setTagName] = useState("");
   const [stateTag, setStateTag] = useState([]);
-  const [filterTag, setfilterTag] = useState();
 
   useEffect(() => {
     async function firstLoad() {
@@ -104,7 +103,6 @@ const Dashboard = () => {
   }, []);
 
   async function handleChangePeriod(value) {
-    console.log(value);
     setPeriod(value);
   }
 
@@ -119,8 +117,6 @@ const Dashboard = () => {
   }
 
   async function handleChangeTagName(value) {
-    setfilterTag(value);
-    console.log(value);
     setTagName(value);
   }
 
@@ -128,6 +124,7 @@ const Dashboard = () => {
     setLoading(true);
 
     let params = {};
+    let tagParams = {};
 
     if (period > 0) {
       params = {
@@ -149,23 +146,33 @@ const Dashboard = () => {
       };
     }
 
+    if (tagName) {
+      params = { ...params, tagName };
+      const dataTag = await find(params);
+      console.log({ dataTag });
+    }
+
+    if (!tagName){
+      const dataTag = await findTag({ tagName });
+      setStateTag(dataTag);
+    }
+
+    
     if (Object.keys(params).length === 0) {
       toast.error("Parametrize o filtro");
       setLoading(false);
       return;
     }
+    
+   
 
     const data = await find(params);
 
-    if (!tagName) {
-      params = { tagName };
-      const dataTag = await findTag(params);
-      setStateTag(dataTag);
-    }
-
-    console.log(tagName);
 
     setCounters(data.counters);
+    console.log(data);
+
+    console.log(data.counters);
     if (isArray(data.attendants)) {
       setAttendants(data.attendants);
     } else {
@@ -299,11 +306,13 @@ const Dashboard = () => {
                 </InputLabel>
                 <Select
                   labelId="tag-selector-label"
-                  value={filterTag}
+                  value={tagName}
                   onChange={(e) => handleChangeTagName(e.target.value)}
                 >
                   {stateTag.map((state, index) => (
-                    <MenuItem value={index}>{state}</MenuItem>
+                    <MenuItem key={index} value={state}>
+                      {state}
+                    </MenuItem>
                   ))}
                 </Select>
                 <FormHelperText>Selecione a tag desejada</FormHelperText>

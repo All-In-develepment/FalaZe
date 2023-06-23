@@ -14,6 +14,7 @@ import Users from "../pages/Users";
 import Contacts from "../pages/Contacts/";
 import Queues from "../pages/Queues/";
 import Tags from "../pages/Tags/";
+import Report from "../pages/Report/";
 import MessagesAPI from "../pages/MessagesAPI/";
 import Helps from "../pages/Helps/";
 import ContactLists from "../pages/ContactLists/";
@@ -31,7 +32,6 @@ import CampaignReport from "../pages/CampaignReport";
 import Annoucements from "../pages/Annoucements";
 import Chat from "../pages/Chat";
 import Subscription from "../pages/Subscription/";
-
 
 const Routes = () => {
   const [showCampaigns, setShowCampaigns] = useState(false);
@@ -54,6 +54,7 @@ const Routes = () => {
             <WhatsAppsProvider>
               <LoggedInLayout>
                 <Route exact path="/" component={Dashboard} isPrivate />
+                <Route exact path="/reports" component={Report} isPrivate />
                 <Route
                   exact
                   path="/tickets/:ticketId?"

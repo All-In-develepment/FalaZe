@@ -16,12 +16,25 @@ const useDashboard = () => {
       method: "GET",
       params,
     });
+
+    return data;
+  };
+
+  const getNumberTags = async (params) => {
+    const { data } = await api.request({
+      url: `/report`,
+      method: "GET",
+      params,
+    });
+
+    console.log(data);
     return data;
   };
 
   return {
     find,
     findTag,
+    getNumberTags,
   };
 };
 

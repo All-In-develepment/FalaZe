@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable camelcase */
-import { QueryTypes } from "sequelize";
+import { Op, QueryTypes } from "sequelize";
 import * as _ from "lodash";
 import sequelize from "../../database";
 import Tag from "../../models/Tag";
@@ -9,6 +9,7 @@ import TicketTraking from "../../models/TicketTraking";
 import TicketTag from "../../models/TicketTag";
 import Ticket from "../../models/Ticket";
 import Contact from "../../models/Contact";
+import { DashBoardTagService } from "./DashboardTagService";
 
 export interface DashboardData {
   counters: any;
@@ -64,9 +65,9 @@ export default async function DashboardDataService(
     ),
     counters as (
       select
-        (select avg("supportTime") from traking where "supportTime" > 0) "avgSupportTime",
-        (select avg("waitTime") from traking where "waitTime" > 0) "avgWaitTime",
-        (
+      (select avg("supportTime") from traking where "supportTime" > 0) "avgSupportTime",
+      (select avg("waitTime") from traking where "waitTime" > 0) "avgWaitTime",
+      (
           select count(distinct "id")
           from "Tickets"
           where status like 'open' and "companyId" = ?
@@ -98,8 +99,8 @@ export default async function DashboardDataService(
         att.tickets,
         att.rating,
         att.online
-      from "Users" u
-      left join (
+        from "Users" u
+        left join (
         select
           u1.id,
           u1."name",
@@ -114,8 +115,8 @@ export default async function DashboardDataService(
       ) att on att.id = u.id
       where u."companyId" = ?
       order by att.name
-    )
-    select
+      )
+      select
       (select coalesce(jsonb_build_object('counters', c.*)->>'counters', '{}')::jsonb from counters c) counters,
       (select coalesce(json_agg(a.*), '[]')::jsonb from attedants a) attendants;
   `;
@@ -137,6 +138,34 @@ export default async function DashboardDataService(
     where += ` and tt."finishedAt" <= ?`;
     replacements.push(`${params.date_to} 23:59:59`);
   }
+
+  // if (_.has(params, "tagName")) {
+  //   // const { id } = await Tag.findOne({where: {name: params.tagName}})
+  //   // query.replace('--tochange', `where "tagId" = '${id}'`)
+  //   query.replace('--tochange', `where "tagId" = '7'`)
+  //   console.log("oi");
+
+  //   const dashBoardTag = await DashBoardTagService(params);
+  //   if (dashBoardTag) {
+  //     query.replace(
+  //       `select count(distinct "id")
+  //       from "Tickets"
+  //       where status like 'open' and "companyId" = ?`,
+  //       `select count(*)
+  //       from "TicketTags"
+  //       where "tagId" = '7'`
+  //     );
+  //     replacements.push(params.tagName);
+  //   }
+  //   query.replace(
+  //     `select count(distinct "id")
+  //     from "Tickets"
+  //     where status like 'open' and "companyId" = ?`,
+  //     `select COUNT(*)
+  //      from "TicketTags"`
+  //   );
+  //   replacements.push(params.tagName);
+  // }
 
   replacements.push(companyId);
   replacements.push(companyId);

@@ -26,8 +26,9 @@ import PeopleIcon from "@material-ui/icons/People";
 import ListIcon from "@material-ui/icons/ListAlt";
 import AnnouncementIcon from "@material-ui/icons/Announcement";
 import ForumIcon from "@material-ui/icons/Forum";
-import LocalAtmIcon from '@material-ui/icons/LocalAtm';
+import LocalAtmIcon from "@material-ui/icons/LocalAtm";
 import PaymentIcon from "@material-ui/icons/Payment";
+import NotesIcon from "@material-ui/icons/Notes";
 
 import { i18n } from "../translate/i18n";
 import { WhatsAppsContext } from "../context/WhatsApp/WhatsAppsContext";
@@ -230,6 +231,8 @@ const MainListItems = (props) => {
         )}
       />
 
+      <ListItemLink to="/report" primary="Relatório" icon={<NotesIcon />} />
+
       <ListItemLink
         to="/tickets"
         primary={i18n.t("mainDrawer.listItems.tickets")}
@@ -369,17 +372,17 @@ const MainListItems = (props) => {
               primary={i18n.t("mainDrawer.listItems.messagesAPI")}
               icon={<CodeRoundedIcon />}
             />
-              <ListItemLink
-                to="/financeiro"
-                primary={i18n.t("mainDrawer.listItems.financeiro")}
-                icon={<LocalAtmIcon />}
-              />
+            <ListItemLink
+              to="/financeiro"
+              primary={i18n.t("mainDrawer.listItems.financeiro")}
+              icon={<LocalAtmIcon />}
+            />
             <ListItemLink
               to="/settings"
               primary={i18n.t("mainDrawer.listItems.settings")}
               icon={<SettingsOutlinedIcon />}
             />
-{/*             <ListItemLink
+            {/*             <ListItemLink
               to="/subscription"
               primary="Assinatura"
               icon={<PaymentIcon />}

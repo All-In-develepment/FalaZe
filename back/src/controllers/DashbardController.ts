@@ -21,7 +21,6 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 
 export const dashBoardTag = async (req: Request, res: Response) => {
   const params: Params = req.query;
-
   const dashboardData = await DashBoardTagService(params);
   return res.status(200).json(dashboardData);
 };
