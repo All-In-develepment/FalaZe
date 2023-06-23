@@ -231,7 +231,7 @@ const MainListItems = (props) => {
         )}
       />
 
-      <ListItemLink to="/report" primary="Relatório" icon={<NotesIcon />} />
+      <ListItemLink to="/reports" primary="Relatório" icon={<NotesIcon />} />
 
       <ListItemLink
         to="/tickets"
