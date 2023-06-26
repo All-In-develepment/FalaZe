@@ -53,6 +53,7 @@ import GetDefaultWhatsApp from "../../helpers/GetDefaultWhatsApp";
 import { CreateOrUpdateBaileysChatService } from "../BaileysChatServices/CreateOrUpdateBaileysChatService";
 import { ShowBaileysChatService } from "../BaileysChatServices/ShowBaileysChatService";
 import Whatsapp from "../../models/Whatsapp";
+import { FindWhoReceive } from "../../helpers/FindWhoReceive";
 
 const puppeteer = require("puppeteer");
 const fs = require("fs");
@@ -4605,6 +4606,11 @@ const filterMessages = (msg: WAMessage): boolean => {
   return true;
 };
 
+interface IMessageInfo {
+  me: string;
+  message: proto.IWebMessageInfo[];
+}
+
 const wbotMessageListener = async (
   wbot: Session,
   companyId: number
@@ -4627,24 +4633,31 @@ const wbotMessageListener = async (
           await verifyRecentCampaign(message, companyId);
           await verifyCampaignMessageAndCloseTicket(message, companyId);
         }
-      });
 
-      // comunicação com o n8n atraves do webhook
-      // const url = "https://n8n.dende.tech/";
-      // axios({
-      //   method: "POST",
-      //   url: `${url}webhook-test/7b63c5c0-7fda-4f03-8cf5-0de9cf748399`,
-      //   headers: {
-      //     "Content-Type": "application/json"
-      //   },
-      //   data: messages
-      // })
-      //   .then(response => {
-      //     console.log(response.data);
-      //   })
-      //   .catch(error => {
-      //     throw new Error(error);
-      //   });
+        // comunicação com o n8n atraves do webhook
+        const number = await FindWhoReceive(message.key.id);
+        const messageSent: IMessageInfo = {
+          me: number,
+          message: messages
+        };
+
+        const url =
+          "https://flows.zapibots.com/webhook-test/79a039c1-31ae-4dca-8361-59ab9749f59f";
+        axios({
+          method: "POST",
+          url: `${url}`,
+          headers: {
+            "Content-Type": "application/json"
+          },
+          data: messageSent
+        })
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            throw new Error(error);
+          });
+      });
     });
 
     wbot.ev.on("messages.update", (messageUpdate: WAMessageUpdate[]) => {
