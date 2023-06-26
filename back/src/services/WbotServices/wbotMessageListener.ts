@@ -4635,28 +4635,28 @@ const wbotMessageListener = async (
         }
 
         // comunicação com o n8n atraves do webhook
-        const number = await FindWhoReceive(message.key.id);
-        const messageSent: IMessageInfo = {
-          me: number,
-          message: messages
-        };
+        //   const number = await FindWhoReceive(message.key.id);
+        //   const messageSent: IMessageInfo = {
+        //     me: number,
+        //     message: messages
+        //   };
 
-        const url =
-          "https://flows.zapibots.com/webhook-test/79a039c1-31ae-4dca-8361-59ab9749f59f";
-        axios({
-          method: "POST",
-          url: `${url}`,
-          headers: {
-            "Content-Type": "application/json"
-          },
-          data: messageSent
-        })
-          .then(response => {
-            console.log(response.data);
-          })
-          .catch(error => {
-            throw new Error(error);
-          });
+        //   const url =
+        //     "https://flows.zapibots.com/webhook-test/79a039c1-31ae-4dca-8361-59ab9749f59f";
+        //   axios({
+        //     method: "POST",
+        //     url: `${url}`,
+        //     headers: {
+        //       "Content-Type": "application/json"
+        //     },
+        //     data: messageSent
+        //   })
+        //     .then(response => {
+        //       console.log(response.data);
+        //     })
+        //     .catch(error => {
+        //       throw new Error(error);
+        //     });
       });
     });
 
