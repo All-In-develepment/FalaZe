@@ -20,6 +20,7 @@ interface WhatsappData {
   status?: string;
   isDefault?: boolean;
   token?: string;
+  webHook?: string;
 }
 
 interface QueryParams {
@@ -43,7 +44,8 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     complationMessage,
     outOfHoursMessage,
     queueIds,
-    token
+    token,
+    webHook
   }: WhatsappData = req.body;
   const { companyId } = req.user;
 
@@ -56,7 +58,8 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     outOfHoursMessage,
     queueIds,
     companyId,
-    token
+    token,
+    webHook
   });
 
   StartWhatsAppSession(whatsapp, companyId);

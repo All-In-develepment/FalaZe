@@ -11,13 +11,15 @@ export const ReportService = async ({
 }: Params) => {
   try {
     const dateFrom = new Date(date_from) as unknown as number;
-    const dateTo = new Date(date_to) as unknown as number;
+    const dateTo = (new Date(date_to).getTime() +
+      24 * 60 * 60 * 1000) as unknown as number;
 
     if (tagName.toLowerCase() === "todos" && date_from) {
       const count = await TicketTag.count({
         where: {
           createdAt: {
-            [Op.between]: [dateFrom, dateTo]
+            [Op.gte]: dateFrom,
+            [Op.lt]: dateTo
           }
         }
       });

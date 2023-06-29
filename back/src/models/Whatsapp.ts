@@ -102,6 +102,9 @@ class Whatsapp extends Model<Whatsapp> {
 
   @Column
   token: string;
+
+  @Column
+  webHook: string;
 }
 
 export default Whatsapp;

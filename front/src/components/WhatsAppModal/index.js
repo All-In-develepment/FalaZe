@@ -69,6 +69,7 @@ const WhatsAppModal = ({ open, onClose, whatsAppId }) => {
     isDefault: false,
     token: "",
     provider: "beta",
+    webHook: "",
   };
   const [whatsApp, setWhatsApp] = useState(initialState);
   const [selectedQueueIds, setSelectedQueueIds] = useState([]);
@@ -254,6 +255,17 @@ const WhatsAppModal = ({ open, onClose, whatsAppId }) => {
                     type="token"
                     fullWidth
                     name="token"
+                    variant="outlined"
+                    margin="dense"
+                  />
+                </div>
+                <div>
+                  <Field
+                    as={TextField}
+                    label={i18n.t("queueModal.form.webHook")}
+                    type="webHook"
+                    fullWidth
+                    name="webHook"
                     variant="outlined"
                     margin="dense"
                   />

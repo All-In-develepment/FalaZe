@@ -18,6 +18,7 @@ interface Request {
   isDefault?: boolean;
   token?: string;
   provider?: string;
+  webHook?: string;
 }
 
 interface Response {
@@ -36,7 +37,8 @@ const CreateWhatsAppService = async ({
   isDefault = false,
   companyId,
   token = "",
-  provider = "beta"
+  provider = "beta",
+  webHook = ""
 }: Request): Promise<Response> => {
   const company = await Company.findOne({
     where: {
@@ -138,7 +140,8 @@ const CreateWhatsAppService = async ({
       isDefault,
       companyId,
       token,
-      provider
+      provider,
+      webHook
     },
     { include: ["queues"] }
   );

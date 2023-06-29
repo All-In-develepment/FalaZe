@@ -7,10 +7,16 @@ export const FindWhoReceive = async (id: string) => {
 
   const { whatsappId } = await Ticket.findByPk(ticketId);
 
-  const { session } = await Whatsapp.findByPk(whatsappId);
+  const { session, webHook, token } = await Whatsapp.findByPk(whatsappId);
 
   const obj = JSON.parse(session);
   const numberId: string = obj.creds.me.id;
 
-  return numberId.split(":", 1)[0];
+  const number = numberId.split(":", 1)[0];
+
+  return {
+    number,
+    token,
+    webHook
+  };
 };

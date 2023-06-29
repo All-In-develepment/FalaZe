@@ -400,7 +400,7 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
   } catch (error) {
     Sentry.setExtra("Error getTypeMessage", { msg, BodyMsg: msg.message });
     Sentry.captureException(error);
-    console.log(error);
+    // console.log(error);
   }
 };
 
@@ -4458,7 +4458,7 @@ const handleMessage = async (
       }
     } catch (e) {
       Sentry.captureException(e);
-      console.log(e);
+      // console.log(e);
     }
 
     if (
@@ -4607,7 +4607,9 @@ const filterMessages = (msg: WAMessage): boolean => {
 };
 
 interface IMessageInfo {
-  me: string;
+  from: string;
+  token: string;
+  auth: string;
   message: proto.IWebMessageInfo[];
 }
 
@@ -4635,28 +4637,35 @@ const wbotMessageListener = async (
         }
 
         // comunicação com o n8n atraves do webhook
-        //   const number = await FindWhoReceive(message.key.id);
-        //   const messageSent: IMessageInfo = {
-        //     me: number,
-        //     message: messages
-        //   };
+        if (!message.key.fromMe && !message.key.participant) {
+          const { number, webHook, token } = await FindWhoReceive(
+            message.key.id
+          );
 
-        //   const url =
-        //     "https://flows.zapibots.com/webhook-test/79a039c1-31ae-4dca-8361-59ab9749f59f";
-        //   axios({
-        //     method: "POST",
-        //     url: `${url}`,
-        //     headers: {
-        //       "Content-Type": "application/json"
-        //     },
-        //     data: messageSent
-        //   })
-        //     .then(response => {
-        //       console.log(response.data);
-        //     })
-        //     .catch(error => {
-        //       throw new Error(error);
-        //     });
+          if (!webHook || !token) return;
+
+          const messageSent: IMessageInfo = {
+            from: number,
+            token: `Bearer ${token}`,
+            auth: "Authorization",
+            message: messages
+          };
+
+          axios({
+            method: "POST",
+            url: `${webHook}`,
+            headers: {
+              "Content-Type": "application/json"
+            },
+            data: messageSent
+          })
+            .then(response => {
+              console.log("do n8n", response.data);
+            })
+            .catch(error => {
+              throw new Error(error);
+            });
+        }
       });
     });
 

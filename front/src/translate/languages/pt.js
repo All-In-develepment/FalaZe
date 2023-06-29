@@ -178,6 +178,7 @@ const messages = {
           outOfHoursMessage: "Mensagem de fora de expediente",
           ratingMessage: "Mensagem de avaliação",
           token: "Token",
+          webHook: "WebHook",
         },
         buttons: {
           okAdd: "Adicionar",
@@ -243,9 +244,9 @@ const messages = {
       uploads: {
         titles: {
           titleUploadMsgDragDrop: "ARRASTE E SOLTE ARQUIVOS NO CAMPO ABAIXO",
-          titleFileList: "Lista de arquivo(s)"
+          titleFileList: "Lista de arquivo(s)",
         },
-      },      
+      },
       ticketsManager: {
         buttons: {
           newTicket: "Novo",
