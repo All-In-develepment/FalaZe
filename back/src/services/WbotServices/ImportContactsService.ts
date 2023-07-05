@@ -17,12 +17,10 @@ const ImportContactsService = async (companyId: number): Promise<void> => {
   try {
     const contactsString = await ShowBaileysService(wbot.id);
     phoneContacts = JSON.parse(JSON.stringify(contactsString.contacts));
-
   } catch (err) {
     Sentry.captureException(err);
     logger.error(`Could not get whatsapp contacts from phone. Err: ${err}`);
   }
-
 
   const phoneContactsList = isString(phoneContacts)
     ? JSON.parse(phoneContacts)
@@ -53,7 +51,6 @@ const ImportContactsService = async (companyId: number): Promise<void> => {
         }
       }
     });
-
   }
 };
 

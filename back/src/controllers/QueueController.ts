@@ -6,6 +6,7 @@ import ListQueuesService from "../services/QueueService/ListQueuesService";
 import ShowQueueService from "../services/QueueService/ShowQueueService";
 import UpdateQueueService from "../services/QueueService/UpdateQueueService";
 import { isNil } from "lodash";
+import ListNameService from "../services/QueueService/ListNameService";
 
 type QueueFilter = {
   companyId: number;
@@ -23,6 +24,23 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
   const queues = await ListQueuesService({ companyId });
 
   return res.status(200).json(queues);
+};
+
+export const getName = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { companyId: userCompanyId } = req.user;
+  const { companyId: queryCompanyId } = req.query as unknown as QueueFilter;
+  let companyId = userCompanyId;
+
+  if (!isNil(queryCompanyId)) {
+    companyId = +queryCompanyId;
+  }
+
+  const names = await ListNameService({ companyId });
+
+  return res.status(200).json(names);
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {

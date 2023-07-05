@@ -78,7 +78,7 @@ const ListTicketsService = async ({
       model: Whatsapp,
       as: "whatsapp",
       attributes: ["name"]
-    },
+    }
   ];
 
   if (showAll === "true") {
@@ -207,7 +207,7 @@ const ListTicketsService = async ({
     };
   }
 
-  const limit = 40;
+  const limit = 500;
   const offset = limit * (+pageNumber - 1);
 
   whereCondition = {

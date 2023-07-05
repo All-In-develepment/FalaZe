@@ -38,13 +38,15 @@ const TransferTicketModalCustom = ({ modalOpen, onClose, ticketid }) => {
   const history = useHistory();
   const [options, setOptions] = useState([]);
   const [queues, setQueues] = useState([]);
+  const [connections, setConnections] = useState([]);
   const [allQueues, setAllQueues] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchParam, setSearchParam] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedQueue, setSelectedQueue] = useState("");
+  const [selectedName, setSelectedName] = useState("");
   const classes = useStyles();
-  const { findAll: findAllQueues } = useQueues();
+  const { findAll: findAllQueues, findAllUsers } = useQueues();
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -59,6 +61,9 @@ const TransferTicketModalCustom = ({ modalOpen, onClose, ticketid }) => {
         const list = await findAllQueues();
         setAllQueues(list);
         setQueues(list);
+
+        const listConnections = await findAllUsers();
+        setConnections(listConnections);
       };
       loadQueues();
     }
@@ -99,7 +104,8 @@ const TransferTicketModalCustom = ({ modalOpen, onClose, ticketid }) => {
   const handleSaveTicket = async (e) => {
     e.preventDefault();
     if (!ticketid) return;
-    if (!selectedQueue || selectedQueue === "") return;
+
+    if (!selectedQueue && !selectedName) return;
     setLoading(true);
     try {
       let data = {};
@@ -110,6 +116,15 @@ const TransferTicketModalCustom = ({ modalOpen, onClose, ticketid }) => {
 
       if (selectedQueue && selectedQueue !== null) {
         data.queueId = selectedQueue;
+
+        if (!selectedUser) {
+          data.status = "pending";
+          data.userId = null;
+        }
+      }
+
+      if (selectedName) {
+        data.userName = selectedName;
 
         if (!selectedUser) {
           data.status = "pending";
@@ -172,7 +187,11 @@ const TransferTicketModalCustom = ({ modalOpen, onClose, ticketid }) => {
               />
             )}
           />
-          <FormControl variant="outlined" className={classes.maxWidth}>
+          <FormControl
+            variant="outlined"
+            className={classes.maxWidth}
+            style={{ marginBottom: 20 }}
+          >
             <InputLabel>
               {i18n.t("transferTicketModal.fieldQueueLabel")}
             </InputLabel>
@@ -184,6 +203,22 @@ const TransferTicketModalCustom = ({ modalOpen, onClose, ticketid }) => {
               {queues.map((queue) => (
                 <MenuItem key={queue.id} value={queue.id}>
                   {queue.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl variant="outlined" className={classes.maxWidth}>
+            <InputLabel>
+              {i18n.t("transferTicketModal.fieldUserLabel")}
+            </InputLabel>
+            <Select
+              value={selectedName}
+              onChange={(e) => setSelectedName(e.target.value)}
+              label={i18n.t("transferTicketModal.fieldQueuePlaceholder")}
+            >
+              {connections.map((connection) => (
+                <MenuItem key={connection.id} value={connection.id}>
+                  {connection.name}
                 </MenuItem>
               ))}
             </Select>

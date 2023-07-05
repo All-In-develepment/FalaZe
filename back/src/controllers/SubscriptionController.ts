@@ -13,7 +13,6 @@ import UpdateUserService from "../services/UserServices/UpdateUserService";
 
 const app = express();
 
-
 export const index = async (req: Request, res: Response): Promise<Response> => {
   const gerencianet = Gerencianet(options);
   return res.json(gerencianet.getSubscriptions());
@@ -22,9 +21,9 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 export const createSubscription = async (
   req: Request,
   res: Response
-  ): Promise<Response> => {
-    const gerencianet = Gerencianet(options);
-    const { companyId } = req.user;
+): Promise<Response> => {
+  const gerencianet = Gerencianet(options);
+  const { companyId } = req.user;
 
   const schema = Yup.object().shape({
     price: Yup.string().required(),
@@ -33,7 +32,7 @@ export const createSubscription = async (
   });
 
   if (!(await schema.isValid(req.body))) {
-    console.log("Erro linha 32")
+    console.log("Erro linha 32");
     throw new AppError("Validation fails", 400);
   }
 
@@ -56,11 +55,13 @@ export const createSubscription = async (
       expiracao: 3600
     },
     valor: {
-      original: price.toLocaleString("pt-br", { minimumFractionDigits: 2 }).replace(",", ".")
+      original: price
+        .toLocaleString("pt-br", { minimumFractionDigits: 2 })
+        .replace(",", ".")
     },
     chave: process.env.GERENCIANET_PIX_KEY,
     solicitacaoPagador: `#Fatura:${invoiceId}`
-    };
+  };
   try {
     const pix = await gerencianet.pixCreateImmediateCharge(null, body);
 
@@ -74,8 +75,7 @@ export const createSubscription = async (
       throw new AppError("Company not found", 404);
     }
 
-
-/*     await Subscriptions.create({
+    /*     await Subscriptions.create({
       companyId,
       isActive: false,
       userPriceCents: users,
@@ -86,7 +86,7 @@ export const createSubscription = async (
       expiresAt: new Date()
     }); */
 
-/*     const { id } = req.user;
+    /*     const { id } = req.user;
     const userData = {};
     const userId = id;
     const requestUserId = parseInt(id);
@@ -98,11 +98,9 @@ export const createSubscription = async (
           user
         }); */
 
-
     return res.json({
       ...pix,
-      qrcode,
-
+      qrcode
     });
   } catch (error) {
     console.log(error);
@@ -145,7 +143,7 @@ export const createWebhook = async (
 export const webhook = async (
   req: Request,
   res: Response
-  ): Promise<Response> => {
+): Promise<Response> => {
   const { type } = req.params;
   const { evento } = req.body;
   if (evento === "teste_webhook") {
@@ -162,9 +160,9 @@ export const webhook = async (
         const { solicitacaoPagador } = detahe;
         const invoiceID = solicitacaoPagador.replace("#Fatura:", "");
         const invoices = await Invoices.findByPk(invoiceID);
-        const companyId =invoices.companyId;
+        const companyId = invoices.companyId;
         const company = await Company.findByPk(companyId);
-    
+
         const expiresAt = new Date(company.dueDate);
         expiresAt.setDate(expiresAt.getDate() + 30);
         const date = expiresAt.toISOString().split("T")[0];
@@ -173,9 +171,9 @@ export const webhook = async (
           await company.update({
             dueDate: date
           });
-         const invoi = await invoices.update({
+          const invoi = await invoices.update({
             id: invoiceID,
-            status: 'paid'
+            status: "paid"
           });
           await company.reload();
           const io = getIO();
@@ -190,10 +188,8 @@ export const webhook = async (
             company: companyUpdate
           });
         }
-
       }
     });
-
   }
 
   return res.json({ ok: true });

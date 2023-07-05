@@ -27,13 +27,13 @@ import { TicketsContext } from "../../context/Tickets/TicketsContext";
 import toastError from "../../errors/toastError";
 import { v4 as uuidv4 } from "uuid";
 
-import RoomIcon from '@material-ui/icons/Room';
+import RoomIcon from "@material-ui/icons/Room";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import AndroidIcon from "@material-ui/icons/Android";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import TicketMessagesDialog from "../TicketMessagesDialog";
-import DoneIcon from '@material-ui/icons/Done';
-import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import DoneIcon from "@material-ui/icons/Done";
+import ClearOutlinedIcon from "@material-ui/icons/ClearOutlined";
 
 const useStyles = makeStyles((theme) => ({
   ticket: {
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
     justifySelf: "flex-end",
     textAlign: "right",
     position: "relative",
-    top: -13
+    top: -13,
   },
 
   closedBadge: {
@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: "center",
     marginRight: 0,
     marginLeft: "auto",
-    top: -13
+    top: -13,
   },
 
   badgeStyle: {
@@ -119,13 +119,13 @@ const useStyles = makeStyles((theme) => ({
 
   ticketInfo: {
     position: "relative",
-    top: -13
+    top: -13,
   },
 
   ticketInfo1: {
     position: "relative",
     top: 13,
-    right: 0
+    right: 0,
   },
   Radiusdot: {
     "& .MuiBadge-badge": {
@@ -133,13 +133,12 @@ const useStyles = makeStyles((theme) => ({
       position: "inherit",
       height: 16,
       margin: 2,
-      padding: 3
+      padding: 3,
     },
     "& .MuiBadge-anchorOriginTopRightRectangle": {
       transform: "scale(1) translate(0%, -40%)",
     },
-
-  }
+  },
 }));
 
 const TicketListItemCustom = ({ ticket }) => {
@@ -232,7 +231,7 @@ const TicketListItemCustom = ({ ticket }) => {
                 position: "inherit",
                 borderRadius: 2,
                 color: "white",
-                top: -6
+                top: -6,
               }}
             />
           )}
@@ -246,10 +245,10 @@ const TicketListItemCustom = ({ ticket }) => {
                 position: "inherit",
                 borderRadius: 2,
                 color: "white",
-                top: -6
+                top: -6,
               }}
               badgeContent={ticket.queue?.name || "Sem fila"}
-            //color="primary"
+              //color="primary"
             />
           )}
           {ticket.status === "open" && (
@@ -291,7 +290,6 @@ const TicketListItemCustom = ({ ticket }) => {
     } else {
       return (
         <>
-
           {ticket.queue?.name !== null && (
             <Badge
               className={classes.Radiusdot}
@@ -303,10 +301,10 @@ const TicketListItemCustom = ({ ticket }) => {
                 position: "inherit",
                 borderRadius: 2,
                 color: "white",
-                top: -6
+                top: -6,
               }}
               badgeContent={ticket.queue?.name || "Sem fila"}
-            //color=
+              //color=
             />
           )}
           {ticket.status === "pending" && (
@@ -431,11 +429,16 @@ const TicketListItemCustom = ({ ticket }) => {
                 component="span"
                 variant="body2"
                 color="textSecondary"
-              > {ticket.lastMessage.includes('data:image/png;base64') ? <MarkdownWrapper> Localização</MarkdownWrapper> : <MarkdownWrapper>{ticket.lastMessage}</MarkdownWrapper>}
-                {ticket.lastMessage === "" ? <br /> : <MarkdownWrapper>{ticket.lastMessage}</MarkdownWrapper>}
+              >
+                {" "}
+                {ticket.lastMessage.includes("data:image/png;base64") ? (
+                  <MarkdownWrapper> Localização</MarkdownWrapper>
+                ) : (
+                  <MarkdownWrapper>{ticket.lastMessage}</MarkdownWrapper>
+                )}
+                {/* {ticket.lastMessage === "" ? <br /> : <MarkdownWrapper>{ticket.lastMessage}</MarkdownWrapper>} */}
               </Typography>
             </span>
-
           }
         />
         <ListItemSecondaryAction>
@@ -451,7 +454,7 @@ const TicketListItemCustom = ({ ticket }) => {
                 padding: 4,
                 borderRadius: 2,
                 color: "white",
-                top: -13
+                top: -13,
               }}
             />
           )}
@@ -460,7 +463,9 @@ const TicketListItemCustom = ({ ticket }) => {
             <>
               <Badge
                 className={classes.newMessagesCount}
-                badgeContent={ticket.unreadMessages ? ticket.unreadMessages : null}
+                badgeContent={
+                  ticket.unreadMessages ? ticket.unreadMessages : null
+                }
                 classes={{
                   badge: classes.badgeStyle,
                 }}
@@ -478,12 +483,9 @@ const TicketListItemCustom = ({ ticket }) => {
                 )}
               </Typography>
               <br />
-
             </>
           )}
-
         </ListItemSecondaryAction>
-
       </ListItem>
       <Divider variant="inset" component="li" />
     </React.Fragment>
