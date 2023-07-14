@@ -55,6 +55,9 @@ import { ShowBaileysChatService } from "../BaileysChatServices/ShowBaileysChatSe
 import Whatsapp from "../../models/Whatsapp";
 import { FindWhoReceive } from "../../helpers/FindWhoReceive";
 
+
+// import { TelegramService } from "../TelegramServices/CreateTelegramService";
+
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const path = require("path");
@@ -1641,6 +1644,7 @@ const handleChartbot = async (
           rows: sectionsRows
         }
       ];
+
       const buttonMessage = {
         text: formatBody(`\u200e${body}`, ticket.contact),
         buttons,
@@ -4622,6 +4626,8 @@ const wbotMessageListener = async (
       const messages = messageUpsert.messages
         .filter(filterMessages)
         .map(msg => msg);
+
+      // TelegramService();
 
       if (!messages) return;
 

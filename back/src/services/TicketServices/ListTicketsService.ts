@@ -53,6 +53,24 @@ const ListTicketsService = async ({
   };
   let includeCondition: Includeable[];
 
+  // console.log("do front", +startOfDay(parseISO(date)));
+  // console.log({ date });
+
+  // 2023-06-13T19:10:22.656
+
+  // const test = await Ticket.findAndCountAll({
+  //   where: {
+  //     createdAt: {
+  //       [Op.between]: [
+  //         +startOfDay(parseISO("2023-06-13T19:10:22.656")),
+  //         +endOfDay(parseISO("2023-06-13T19:10:22.656"))
+  //       ]
+  //     }
+  //   }
+  // });
+
+  // console.log({ test });
+
   includeCondition = [
     {
       model: Contact,

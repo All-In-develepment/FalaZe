@@ -39,5 +39,7 @@ const CreateInfoAPIExternal = async ({
     );
 
   await ticket.update({ lastMessage: formatBody(body, ticket.contact) });
+
+  return contact;
 };
 export default CreateInfoAPIExternal;

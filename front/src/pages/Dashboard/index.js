@@ -146,28 +146,24 @@ const Dashboard = () => {
       };
     }
 
-    if (tagName) {
-      params = { ...params, tagName };
-      const dataTag = await find(params);
-      console.log({ dataTag });
-    }
+    // if (tagName) {
+    //   params = { ...params, tagName };
+    //   const dataTag = await find(params);
+    //   console.log({ dataTag });
+    // }
 
-    if (!tagName){
-      const dataTag = await findTag({ tagName });
-      setStateTag(dataTag);
-    }
+    // if (!tagName){
+    //   const dataTag = await findTag({ tagName });
+    //   setStateTag(dataTag);
+    // }
 
-    
     if (Object.keys(params).length === 0) {
       toast.error("Parametrize o filtro");
       setLoading(false);
       return;
     }
-    
-   
 
     const data = await find(params);
-
 
     setCounters(data.counters);
     console.log(data);
@@ -298,7 +294,7 @@ const Dashboard = () => {
             </FormControl>
           </Grid>
 
-          {stateTag.length > 0 ? (
+          {/* {stateTag.length > 0 ? (
             <Grid item xs={12} sm={6} md={4}>
               <FormControl className={classes.selectContainer}>
                 <InputLabel id="tag-selector-label">
@@ -322,7 +318,7 @@ const Dashboard = () => {
             <Grid item xs={12} sm={6} md={4}>
               Nenhuma tag cadastrada
             </Grid>
-          )}
+          )} */}
 
           {renderFilters()}
 

@@ -40,13 +40,10 @@ export const SendMessage = async (
       const body = `\u200e${messageData.body}`;
       message = await wbot.sendMessage(chatId, { text: body });
     }
-    const contact = await Contact.findOne({
-      where: { number: messageData.number }
-    });
 
     const companyId = 1;
     const { number, whatsappId, body } = messageData;
-    await CreateInfoAPIExternal({
+    const contact = await CreateInfoAPIExternal({
       number,
       companyId,
       whatsappId,
