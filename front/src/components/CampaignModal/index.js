@@ -160,7 +160,6 @@ const CampaignModal = ({
 
   useEffect(() => {
     const now = moment();
-    console.log("a data", now);
     const scheduledAt = moment(campaign.scheduledAt);
     const moreThenAnHour =
       !Number.isNaN(scheduledAt.diff(now)) && scheduledAt.diff(now, "hour") > 1;

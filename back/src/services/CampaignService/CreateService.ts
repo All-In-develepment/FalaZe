@@ -26,8 +26,6 @@ interface Data {
 const CreateService = async (data: Data): Promise<Campaign> => {
   const { name } = data;
 
-  console.log(data);
-
   const ticketnoteSchema = Yup.object().shape({
     name: Yup.string()
       .min(3, "ERR_CAMPAIGN_INVALID_NAME")
