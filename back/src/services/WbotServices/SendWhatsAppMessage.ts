@@ -7,6 +7,7 @@ import Message from "../../models/Message";
 import Ticket from "../../models/Ticket";
 
 import formatBody from "../../helpers/Mustache";
+import { sendMessageTelegram } from "../TelegramServices/SendMessageTelegramService";
 
 interface Request {
   body: string;
@@ -47,17 +48,27 @@ const SendWhatsAppMessage = async ({
   }
 
   try {
-    const sentMessage = await wbot.sendMessage(
-      number,
-      {
-        text: formatBody(body, ticket.contact)
-      },
-      {
-        ...options
-      }
-    );
+    if (ticket.whatsappId && !ticket.telegramId) {
+      const sentMessage = await wbot.sendMessage(
+        number,
+        {
+          text: formatBody(body, ticket.contact)
+        },
+        {
+          ...options
+        }
+      );
+      await ticket.update({ lastMessage: formatBody(body, ticket.contact) });
+      return sentMessage;
+    }
+
+    sendMessageTelegram({
+      numberContact: ticket.contact.number,
+      message: body,
+      id: 2
+    });
+
     await ticket.update({ lastMessage: formatBody(body, ticket.contact) });
-    return sentMessage;
   } catch (err) {
     Sentry.captureException(err);
     throw new AppError("ERR_SENDING_WAPP_MSG");

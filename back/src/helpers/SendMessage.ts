@@ -49,6 +49,7 @@ export const SendMessage = async (
       whatsappId,
       body
     });
+
     const ticket = await Ticket.findOne({ where: { contactId: contact.id } });
 
     await verifyMessage(message, ticket, contact);

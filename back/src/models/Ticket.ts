@@ -24,6 +24,7 @@ import Company from "./Company";
 import QueueOption from "./QueueOption";
 import Tag from "./Tag";
 import TicketTag from "./TicketTag";
+import Telegram from "./Telegram";
 
 @Table
 class Ticket extends Model<Ticket> {
@@ -97,6 +98,13 @@ class Ticket extends Model<Ticket> {
 
   @BelongsToMany(() => Tag, () => TicketTag)
   tags: Tag[];
+
+  @ForeignKey(() => Telegram)
+  @Column
+  telegramId: number;
+
+  @BelongsTo(() => Telegram)
+  telegram: Telegram;
 
   @ForeignKey(() => Company)
   @Column

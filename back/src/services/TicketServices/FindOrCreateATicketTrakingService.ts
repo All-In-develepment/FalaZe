@@ -6,13 +6,15 @@ interface Params {
   companyId: string | number;
   whatsappId?: string | number;
   userId?: string | number;
+  telegramId?: string | number;
 }
 
 const FindOrCreateATicketTrakingService = async ({
   ticketId,
   companyId,
   whatsappId,
-  userId
+  userId,
+  telegramId
 }: Params): Promise<TicketTraking> => {
   const ticketTraking = await TicketTraking.findOne({
     where: {

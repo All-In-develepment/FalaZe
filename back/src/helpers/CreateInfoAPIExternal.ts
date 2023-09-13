@@ -7,7 +7,8 @@ import FindOrCreateTicketService from "../services/TicketServices/FindOrCreateTi
 interface Request {
   number: string;
   companyId: number;
-  whatsappId: number;
+  whatsappId?: number;
+  telegramId?: number;
   body: string;
 }
 
@@ -15,7 +16,8 @@ const CreateInfoAPIExternal = async ({
   number,
   companyId,
   whatsappId,
-  body
+  body,
+  telegramId
 }: Request) => {
   let contact = await Contact.findOne({ where: { number, companyId } });
 
@@ -28,15 +30,24 @@ const CreateInfoAPIExternal = async ({
     });
   }
   const unreadMessages = 0;
+
   let ticket = await Ticket.findOne({ where: { contactId: contact.id } });
 
-  if (!ticket)
-    ticket = await FindOrCreateTicketService(
+  if (!ticket && whatsappId)
+    ticket = await FindOrCreateTicketService({
       contact,
       whatsappId,
       unreadMessages,
       companyId
-    );
+    });
+
+  if (!ticket && telegramId)
+    ticket = await FindOrCreateTicketService({
+      contact,
+      telegramId,
+      unreadMessages,
+      companyId
+    });
 
   await ticket.update({ lastMessage: formatBody(body, ticket.contact) });
 

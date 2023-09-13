@@ -1,30 +1,58 @@
-import { Telegraf } from "telegraf";
-import { message } from "telegraf/filters";
+import { Api, TelegramClient } from "telegram";
+import { StoreSession, StringSession } from "telegram/sessions";
+import qrcode from "qrcode-terminal";
 import dotenv from "dotenv";
-import axios from "axios";
+import Telegram from "../../models/Telegram";
 
 dotenv.config();
 
-export const TelegramService = async () => {
-  const bot = new Telegraf(process.env.BOT_TOKEN);
+export const createTelegram = async () => {
+  try {
+    const apiId = Number(process.env.API_ID);
+    const apiHash = String(process.env.API_HASH);
+    const stringSession = new StringSession(""); // You should put your string session here
 
-  const url = `https://api.telegram.org/bot${process.env.BOT_TOKEN}/getUpdates`;
+    // const storeSession = new StoreSession("my_session");
+    const client = new TelegramClient(stringSession, apiId, apiHash, {
+      connectionRetries: 5,
+      useWSS: true
+    });
 
-  const result = (await axios.get(url))?.data;
+    await client.connect();
 
-  const chatId: number = result.result[0].message.chat.id;
+    const clientSession = await Telegram.create();
 
-  console.log({ chatId });
+    const user = await client.signInUserWithQrCode(
+      { apiId, apiHash },
+      {
+        onError: async (p1: Error) => {
+          console.log("error", p1);
+          // true = stop the authentication processes
+          return true;
+        },
+        qrCode: async code => {
+          console.log("Convert the next string to a QR code and scan it");
+          const qrCodeURI = `tg://login?token=${code.token.toString(
+            "base64url"
+          )}`;
 
-  bot.telegram.sendMessage(chatId, "ola, como vai, telegramzadaaa");
+          clientSession.update({ qrcode: qrCodeURI });
 
-  // bot.start(ctx => ctx.reply("Welcome"));
-  // bot.help(ctx => ctx.reply("Send me a sticker"));
-  // bot.on(message("sticker"), ctx => ctx.reply("👍"));
-  // bot.hears("hi", ctx => ctx.reply("ola"));
-  // bot.launch();
+          qrcode.generate(qrCodeURI, { small: true });
+        },
+        password: async hint => {
+          // password if needed
+          return "1111";
+        }
+      }
+    );
+    const session = client.session.save();
 
-  // // Enable graceful stop
-  // process.once("SIGINT", () => bot.stop("SIGINT"));
-  // process.once("SIGTERM", () => bot.stop("SIGTERM"));
+    clientSession.update({
+      session,
+      user
+    });
+  } catch (err) {
+    console.log(`ERROR => ${err}`);
+  }
 };

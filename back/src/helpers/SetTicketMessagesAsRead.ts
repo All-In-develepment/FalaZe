@@ -10,6 +10,8 @@ const SetTicketMessagesAsRead = async (ticket: Ticket): Promise<void> => {
   await ticket.update({ unreadMessages: 0 });
 
   try {
+    if (ticket.telegramId) return;
+
     const wbot = await GetTicketWbot(ticket);
     // no baileys temos que marcar cada mensagem como lida
     // não o chat inteiro como é feito no legacy

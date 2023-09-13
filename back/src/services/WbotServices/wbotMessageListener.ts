@@ -54,7 +54,8 @@ import { CreateOrUpdateBaileysChatService } from "../BaileysChatServices/CreateO
 import { ShowBaileysChatService } from "../BaileysChatServices/ShowBaileysChatService";
 import Whatsapp from "../../models/Whatsapp";
 import { FindWhoReceive } from "../../helpers/FindWhoReceive";
-
+import { createTelegram } from "../TelegramServices/CreateTelegramService";
+import { sendMessageTelegram } from "../TelegramServices/SendMessageTelegramService";
 
 // import { TelegramService } from "../TelegramServices/CreateTelegramService";
 
@@ -1873,13 +1874,13 @@ const handleMessage = async (
     )
       return;
 
-    const ticket = await FindOrCreateTicketService(
+    const ticket = await FindOrCreateTicketService({
       contact,
-      whatsapp.id!,
+      whatsappId: whatsapp.id!,
       unreadMessages,
       companyId,
       groupContact
-    );
+    });
 
     /////INTEGRAÇÕES
     const filaescolhida = ticket.queue?.name;
@@ -4626,8 +4627,6 @@ const wbotMessageListener = async (
       const messages = messageUpsert.messages
         .filter(filterMessages)
         .map(msg => msg);
-
-      // TelegramService();
 
       if (!messages) return;
 
