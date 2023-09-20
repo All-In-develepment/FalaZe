@@ -55,7 +55,6 @@ import { ShowBaileysChatService } from "../BaileysChatServices/ShowBaileysChatSe
 import Whatsapp from "../../models/Whatsapp";
 import { FindWhoReceive } from "../../helpers/FindWhoReceive";
 
-
 // import { TelegramService } from "../TelegramServices/CreateTelegramService";
 
 const puppeteer = require("puppeteer");
@@ -4467,7 +4466,7 @@ const handleMessage = async (
 
     if (
       !ticket.queue &&
-      !isGroup &&
+      // !isGroup &&
       !msg.key.fromMe &&
       !ticket.userId &&
       whatsapp.queues.length >= 1
