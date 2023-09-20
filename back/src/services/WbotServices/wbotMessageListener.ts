@@ -4466,7 +4466,7 @@ const handleMessage = async (
 
     if (
       !ticket.queue &&
-      !isGroup &&
+      // !isGroup &&
       !msg.key.fromMe &&
       !ticket.userId &&
       whatsapp.queues.length >= 1
