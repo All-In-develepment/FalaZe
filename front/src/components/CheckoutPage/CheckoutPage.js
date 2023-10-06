@@ -26,8 +26,6 @@ import formInitialValues from "./FormModel/formInitialValues";
 import useStyles from "./styles";
 import Invoices from "../../pages/Financeiro";
 
-import PaymentModal from "./ReviewOrder/Payment";
-
 export default function CheckoutPage(props) {
   const steps = ["Dados", "Personalizar", "Revisar"];
   const { formId, formField } = checkoutFormModel;
@@ -68,7 +66,6 @@ export default function CheckoutPage(props) {
     }
   }
 
-  const [paymentURL, setPaymentURL] = useState("");
   async function _submitForm(values, actions) {
     try {
       const plan = JSON.parse(values.plan);
@@ -93,7 +90,6 @@ export default function CheckoutPage(props) {
 
       // const { data } = await api.post("/subscription", newValues);
       const { data } = await api.post("/invoices/asaas", newValues);
-      console.log(data);
 
       setDatePayment(data);
       actions.setSubmitting(false);
@@ -171,7 +167,12 @@ export default function CheckoutPage(props) {
                         {isLastStep ? "PAGAR" : "PRÓXIMO"}
                       </Button>
                     )}
-                    {isSubmitting && <PaymentModal link={paymentURL} />}
+                    {isSubmitting && (
+                      <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                      />
+                    )}
                   </div>
                 </div>
               </Form>
