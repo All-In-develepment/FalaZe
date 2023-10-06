@@ -2,7 +2,7 @@ import axios from "axios";
 import Setting from "../../models/Setting";
 import { verifySandbox } from "./VerifySandbox";
 
-export const createPixKey = async () => {
+export const qrCodePix = async () => {
   try {
     const api = verifySandbox();
 
@@ -10,22 +10,17 @@ export const createPixKey = async () => {
       where: { key: "asaas" }
     });
 
-    const url = `${api}/pix/addressKeys`;
-    const headers = {
+    const url = `${api}/payments/id/pixQrCode`;
+    const options = {
       headers: {
         accept: "application/json",
         access_token
       }
     };
 
-    const data = {
-      type: "EVP"
-    };
-
-    const response = await axios.post(url, data, headers);
-
-    return response;
+    const { data } = await axios.get(url, options);
+    return data;
   } catch (error) {
-    console.error("error: ola" + error);
+    return error;
   }
 };

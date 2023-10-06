@@ -1,9 +1,12 @@
 import axios from "axios";
+import { verifySandbox } from "./VerifySandbox";
 
 export const getPix = async () => {
-  const url = "https://sandbox.asaas.com/api/v3/payments/id/pixQrCode";
-
   try {
+    const api = verifySandbox();
+
+    const url = `${api}/payments/id/pixQrCode`;
+
     const response = await axios.get(url, {
       headers: {
         Accept: "application/json"

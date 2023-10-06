@@ -48,6 +48,12 @@ class Company extends Model<Company> {
   @Column
   recurrence: string;
 
+  @Column
+  cpfCnpj: string;
+
+  @Column
+  postalCode: string;
+
   @Column({
     type: DataType.JSONB
   })

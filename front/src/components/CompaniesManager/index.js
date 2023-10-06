@@ -79,6 +79,8 @@ export function CompanyForm(props) {
     email: "",
     phone: "",
     planId: "",
+    cpfCnpj: "",
+    postalCode: "",
     status: true,
     campaignsEnabled: false,
     dueDate: "",
@@ -144,12 +146,10 @@ export function CompanyForm(props) {
     const data = { ...record };
     data.recurrence = "MENSAL";
     if (data.dueDate !== "" && data.dueDate !== null) {
-      data.dueDate = moment(data.dueDate)
-        .add(1, "month")
-        .format("YYYY-MM-DD");
+      data.dueDate = moment(data.dueDate).add(1, "month").format("YYYY-MM-DD");
     }
     setRecord(data);
-  }
+  };
   const incrementDueDate = () => {
     const data = { ...record };
     if (data.dueDate !== "" && data.dueDate !== null) {
@@ -203,12 +203,14 @@ export function CompanyForm(props) {
         enableReinitialize
         className={classes.fullWidth}
         initialValues={record}
-        onSubmit={(values, { resetForm }) =>
+        onSubmit={(values, { resetForm }) => {
+          console.log(values);
+
           setTimeout(() => {
             handleSubmit(values);
             resetForm();
-          }, 500)
-        }
+          }, 500);
+        }}
       >
         {(values, setValues) => (
           <Form className={classes.fullWidth}>
@@ -279,6 +281,26 @@ export function CompanyForm(props) {
                     <MenuItem value={false}>Não</MenuItem>
                   </Field>
                 </FormControl>
+              </Grid>
+              <Grid xs={12} sm={6} md={3} item>
+                <Field
+                  as={TextField}
+                  label="CPF/CNPJ"
+                  name="cpfCnpj"
+                  variant="outlined"
+                  className={classes.fullWidth}
+                  margin="dense"
+                />
+              </Grid>
+              <Grid xs={12} sm={6} md={3} item>
+                <Field
+                  as={TextField}
+                  label="CEP"
+                  name="postalCode"
+                  variant="outlined"
+                  className={classes.fullWidth}
+                  margin="dense"
+                />
               </Grid>
               <Grid xs={12} sm={6} md={2} item>
                 <FormControl margin="dense" variant="outlined" fullWidth>
@@ -449,7 +471,6 @@ export function CompaniesManagerGrid(props) {
     return {};
   };
 
-
   return (
     <Paper className={classes.tableContainer}>
       <Table
@@ -465,6 +486,8 @@ export function CompaniesManagerGrid(props) {
             <TableCell align="left">Nome</TableCell>
             <TableCell align="left">E-mail</TableCell>
             <TableCell align="left">Telefone</TableCell>
+            <TableCell align="left">CPF/CNPJ</TableCell>
+            <TableCell align="left">CEP</TableCell>
             <TableCell align="left">Plano</TableCell>
             <TableCell align="left">Campanhas</TableCell>
             <TableCell align="left">Status</TableCell>
@@ -483,6 +506,8 @@ export function CompaniesManagerGrid(props) {
               <TableCell align="left">{row.name || "-"}</TableCell>
               <TableCell align="left">{row.email || "-"}</TableCell>
               <TableCell align="left">{row.phone || "-"}</TableCell>
+              <TableCell align="left">{row.cpfCnpj || "-"}</TableCell>
+              <TableCell align="left">{row.postalCode || "-"}</TableCell>
               <TableCell align="left">{renderPlan(row)}</TableCell>
               <TableCell align="left">{renderCampaignsStatus(row)}</TableCell>
               <TableCell align="left">{renderStatus(row)}</TableCell>
@@ -511,6 +536,8 @@ export default function CompaniesManager() {
     name: "",
     email: "",
     phone: "",
+    cpfCnpj: "",
+    postalCode: "",
     planId: "",
     status: true,
     campaignsEnabled: false,
@@ -533,7 +560,6 @@ export default function CompaniesManager() {
     }
     setLoading(false);
   };
-
 
   const handleSubmit = async (data) => {
     setLoading(true);
@@ -567,8 +593,6 @@ export default function CompaniesManager() {
     setLoading(false);
   };
 
-
-
   const handleOpenDeleteDialog = () => {
     setShowConfirmDialog(true);
   };
@@ -579,6 +603,8 @@ export default function CompaniesManager() {
       name: "",
       email: "",
       phone: "",
+      cpfCnpj: "",
+      postalCode: "",
       planId: "",
       status: true,
       campaignsEnabled: false,
@@ -604,6 +630,8 @@ export default function CompaniesManager() {
       name: data.name || "",
       phone: data.phone || "",
       email: data.email || "",
+      cpfCnpj: data.cpfCnpj || "",
+      postalCode: data.postalCode || "",
       planId: data.planId || "",
       status: data.status === false ? false : true,
       campaignsEnabled,

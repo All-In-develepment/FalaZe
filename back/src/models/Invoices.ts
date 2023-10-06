@@ -39,6 +39,8 @@ class Invoices extends Model<Invoices> {
   @Column
   companyId: number;
 
+  @Column
+  billingId: string;
 }
 
 export default Invoices;

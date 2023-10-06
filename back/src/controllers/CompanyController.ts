@@ -13,7 +13,6 @@ import DeleteCompanyService from "../services/CompanyService/DeleteCompanyServic
 import FindAllCompaniesService from "../services/CompanyService/FindAllCompaniesService";
 import User from "../models/User";
 
-
 type IndexQuery = {
   searchParam: string;
   pageNumber: string;
@@ -29,12 +28,13 @@ type CompanyData = {
   campaignsEnabled?: boolean;
   dueDate?: string;
   recurrence?: string;
+  cpfCnpj?: string;
+  postalCode?: string;
 };
 
 type SchedulesData = {
   schedules: [];
 };
-
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
   const userId = req.user.id;
@@ -62,7 +62,6 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     throw new AppError("você nao tem permissão para este consulta");
   }
 
-
   const newCompany: CompanyData = req.body;
 
   const schema = Yup.object().shape({
@@ -84,7 +83,6 @@ export const show = async (req: Request, res: Response): Promise<Response> => {
   const { id } = req.params;
   const userId = req.user.id;
   const requestUser = await User.findByPk(userId);
-
 
   const company = await ShowCompanyService(id);
 

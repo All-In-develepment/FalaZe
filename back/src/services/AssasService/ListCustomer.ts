@@ -1,15 +1,16 @@
 import axios from "axios";
-import Setting from "../../models/Setting";
-
 import { verifySandbox } from "./VerifySandbox";
 
-export const getPixKey = async () => {
+interface IRequest {
+  access_token: string;
+  cpfCnpj: string;
+}
+
+export const listCustomer = async ({ access_token, cpfCnpj }: IRequest) => {
   try {
     const api = verifySandbox();
-    const { value: access_token } = await Setting.findOne({
-      where: { key: "asaas" }
-    });
-    const url = `${api}/pix/addressKeys`;
+
+    const url = `${api}/customers?cpfCnpj=${cpfCnpj}`;
     const options = {
       headers: {
         accept: "application/json",
@@ -18,7 +19,10 @@ export const getPixKey = async () => {
     };
 
     const { data } = await axios.get(url, options);
-    return data;
+
+    if (data.data.length === 0) return false;
+
+    return data.data[0].id;
   } catch (error) {
     return error;
   }
