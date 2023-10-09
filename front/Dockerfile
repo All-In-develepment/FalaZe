@@ -1,8 +1,10 @@
-FROM node:14-alpine 
+FROM node:latest
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
+
+RUN npm update --save
 
 RUN npm install
 
