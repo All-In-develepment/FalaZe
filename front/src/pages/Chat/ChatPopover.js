@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "scroll",
     ...theme.scrollbarStyles,
   },
+  buttonBG:{
+    color: '#D9D9D9'
+  },
 }));
 
 const reducer = (state, action) => {
@@ -220,10 +223,11 @@ export default function ChatPopover() {
       <IconButton
         aria-describedby={id}
         variant="contained"
-        color={invisible ? "default" : "inherit"}
+        color="secondary"
+        // color={invisible ? "default" : "inherit"}
         onClick={handleClick}
       >
-        <Badge color="secondary" variant="dot" invisible={invisible}>
+        <Badge color="danger" variant="dot" invisible={invisible}>
           <ForumIcon />
         </Badge>
       </IconButton>

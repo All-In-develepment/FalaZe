@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
     whiteSpace: "pre-wrap",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#F7F7FF",
     color: "#303030",
     alignSelf: "flex-start",
     borderTopLeftRadius: 0,

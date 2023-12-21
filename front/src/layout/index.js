@@ -263,7 +263,7 @@ const LoggedInLayout = ({ children }) => {
           <Typography
             component="h1"
             variant="h6"
-            color="#FFFFFF"
+            color="#F7F7FF"
             noWrap
             className={classes.title}
           >
@@ -288,6 +288,7 @@ const LoggedInLayout = ({ children }) => {
               aria-haspopup="true"
               onClick={handleMenu}
               variant="contained"
+              color="secondary"
 
             >
               <AccountCircle />

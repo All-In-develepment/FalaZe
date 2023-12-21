@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
 
 	serachInputWrapper: {
 		flex: 1,
-		background: "#fff",
+		background: "#F7F7FF",
 		display: "flex",
 		borderRadius: 40,
 		padding: 4,
