@@ -111,7 +111,7 @@ export const CheckoutWrapper = styled.div`
   -webkit-box-align: center;
   align-items: center;
   padding: 50px 95px;
-  background: #fff;
+  background: #F7F7FF;
   @media (max-width: 768px) {
     padding: 16px 24px;
 `;

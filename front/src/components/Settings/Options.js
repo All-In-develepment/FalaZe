@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 4,
     width: "100%",
     "& .MuiTab-wrapper": {
-      color: "#081C34",
+      color: "#3d348b",
     },
     "& .MuiTabs-flexContainer": {
       justifyContent: "center",
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   cardAvatar: {
     fontSize: "55px",
     color: grey[500],
-    backgroundColor: "#ffffff",
+    backgroundColor: "#F7F7FF",
     width: theme.spacing(7),
     height: theme.spacing(7),
   },

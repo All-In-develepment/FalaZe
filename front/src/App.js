@@ -19,16 +19,16 @@ const App = () => {
         },
         "&::-webkit-scrollbar-thumb": {
           boxShadow: "inset 0 0 6px rgba(0, 0, 0, 0.3)",
-          backgroundColor: "#e8e8e8",
+          backgroundColor: "#f7f7ff",
         },
       },
       palette: {
-        primary: { main: "#081C34" },
-        secondary: { main: "#6885FF" },
-        tertiary: { main: "#335AFF" },
-        danger: { main: "#1172b8" },
-        warning: { main: "#9C4716" },
-        gray: { main: "#989898" },
+        primary: { main: "#3d348b" },
+        secondary: { main: "#7678ed" },
+        tertiary: { main: "#bac1ff" },
+        danger: { main: "#ffa3d8" },
+        warning: { main: "#7B8C34" },
+        gray: { main: "#373527" },
       },
     },
     locale
