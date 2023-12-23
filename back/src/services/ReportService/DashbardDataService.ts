@@ -145,7 +145,6 @@ export default async function DashboardDataService(
   replacements.push(companyId);
 
   const finalQuery = query.replace("-- filterPeriod", where);
-  console.log({ replacements });
 
   const responseData: DashboardData = await sequelize.query(finalQuery, {
     replacements,

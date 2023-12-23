@@ -28,9 +28,12 @@ export const DashboardAttendantsService = async ({
   companyId
 }: Params) => {
   try {
-    const dateFrom = new Date(date_from) as unknown as number;
-    const dateTo = new Date(date_to) as unknown as number;
-    console.log({ dateFrom, dateTo });
+    const dateFrom = date_from
+      ? (new Date(date_from) as unknown as number)
+      : undefined;
+    const dateTo = date_to
+      ? (new Date(date_to) as unknown as number)
+      : undefined;
 
     const conditionUser = days
       ? `"Tickets"."createdAt" >= (NOW() - INTERVAL ':days days')`
@@ -39,8 +42,6 @@ export const DashboardAttendantsService = async ({
     const conditionAttendants = days
       ? `"createdAt" >= (NOW() - INTERVAL ':days days')`
       : `"createdAt" >= :dateFrom AND "createdAt" < :dateTo`;
-
-    console.log(companyId);
 
     const users = await User.findAll({
       attributes: [

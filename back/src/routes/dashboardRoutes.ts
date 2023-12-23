@@ -8,6 +8,10 @@ const routes = express.Router();
 
 routes.get("/dashboard", isAuth, DashboardController.index);
 routes.get("/dashboard/tag", isAuth, DashboardController.dashBoardTag);
-routes.get("/dashboard/attendants", DashboardController.dashBoardAttendants);
+routes.get(
+  "/dashboard/attendants",
+  isAuth,
+  DashboardController.dashBoardAttendants
+);
 
 export default routes;

@@ -17,8 +17,6 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     params
   );
 
-  console.log(dashboardData);
-
   return res.status(200).json(dashboardData);
 };
 
@@ -33,8 +31,6 @@ export const dashBoardAttendants = async (
   res: Response
 ): Promise<Response> => {
   const { days: day, date_from, date_to, companyId }: Params = req.query;
-
-  console.log({ date_from, date_to, day });
 
   const days = parseInt(`${day}`.replace(/\D/g, ""), 10);
 
