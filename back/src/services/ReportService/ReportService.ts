@@ -14,7 +14,11 @@ export const ReportService = async ({
     const dateTo = (new Date(date_to).getTime() +
       24 * 60 * 60 * 1000) as unknown as number;
 
+    console.log({ dateFrom, dateTo });
+
     if (tagName.toLowerCase() === "todos" && date_from) {
+      console.log("toca");
+
       const count = await TicketTag.count({
         where: {
           createdAt: {
@@ -23,6 +27,9 @@ export const ReportService = async ({
           }
         }
       });
+
+      console.log({ count });
+
       return count;
     } else if (tagName.toLowerCase() === "todos") {
       const count = await TicketTag.count();

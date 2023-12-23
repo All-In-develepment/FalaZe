@@ -16,8 +16,20 @@ interface CompanyData {
   recurrence?: string;
 }
 
+export interface ICreateSubscription extends CompanyData {
+  addressNumber: string;
+  holderName: string;
+  number: string;
+  expiryMonth: string;
+  expiryYear: string;
+  ccv: string;
+  value: number;
+  cpfCnpj: string;
+  postalCode: string;
+}
+
 const CreateCompanyService = async (
-  companyData: CompanyData
+  companyData: ICreateSubscription
 ): Promise<Company> => {
   const {
     name,
@@ -84,7 +96,7 @@ const CreateCompanyService = async (
       companyId: company.id,
       key: "asaas",
       value: ""
-    },
+    }
   });
 
   //tokenixc
@@ -97,7 +109,7 @@ const CreateCompanyService = async (
       companyId: company.id,
       key: "tokenixc",
       value: ""
-    },
+    }
   });
 
   //ipixc
@@ -110,7 +122,7 @@ const CreateCompanyService = async (
       companyId: company.id,
       key: "ipixc",
       value: ""
-    },
+    }
   });
 
   //ipmkauth
@@ -123,7 +135,7 @@ const CreateCompanyService = async (
       companyId: company.id,
       key: "ipmkauth",
       value: ""
-    },
+    }
   });
 
   //clientsecretmkauth
@@ -136,7 +148,7 @@ const CreateCompanyService = async (
       companyId: company.id,
       key: "clientsecretmkauth",
       value: ""
-    },
+    }
   });
 
   //clientidmkauth
@@ -149,7 +161,7 @@ const CreateCompanyService = async (
       companyId: company.id,
       key: "clientidmkauth",
       value: ""
-    },
+    }
   });
 
   //CheckMsgIsGroup
@@ -162,7 +174,7 @@ const CreateCompanyService = async (
       companyId: company.id,
       key: "enabled",
       value: ""
-    },
+    }
   });
 
   //CheckMsgIsGroup
@@ -175,7 +187,7 @@ const CreateCompanyService = async (
       companyId: company.id,
       key: "call",
       value: "disabled"
-    },
+    }
   });
 
   //scheduleType
@@ -188,7 +200,7 @@ const CreateCompanyService = async (
       companyId: company.id,
       key: "scheduleType",
       value: "disabled"
-    },
+    }
   });
 
   //userRating
@@ -201,7 +213,7 @@ const CreateCompanyService = async (
       companyId: company.id,
       key: "userRating",
       value: "disabled"
-    },
+    }
   });
 
   //userRating
@@ -214,7 +226,7 @@ const CreateCompanyService = async (
       companyId: company.id,
       key: "chatBotType",
       value: "text"
-    },
+    }
   });
 
   if (companyData.campaignsEnabled !== undefined) {
@@ -227,13 +239,14 @@ const CreateCompanyService = async (
         companyId: company.id,
         key: "campaignsEnabled",
         value: `${campaignsEnabled}`
-      },
-
+      }
     });
     if (!created) {
       await setting.update({ value: `${campaignsEnabled}` });
     }
   }
+
+  console.log(company.id);
 
   return company;
 };

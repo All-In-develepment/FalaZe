@@ -5,7 +5,9 @@ import AppError from "../errors/AppError";
 import Company from "../models/Company";
 
 import ListCompaniesService from "../services/CompanyService/ListCompaniesService";
-import CreateCompanyService from "../services/CompanyService/CreateCompanyService";
+import CreateCompanyService, {
+  ICreateSubscription
+} from "../services/CompanyService/CreateCompanyService";
 import UpdateCompanyService from "../services/CompanyService/UpdateCompanyService";
 import ShowCompanyService from "../services/CompanyService/ShowCompanyService";
 import UpdateSchedulesService from "../services/CompanyService/UpdateSchedulesService";
@@ -62,7 +64,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     throw new AppError("você nao tem permissão para este consulta");
   }
 
-  const newCompany: CompanyData = req.body;
+  const newCompany: ICreateSubscription = req.body;
 
   const schema = Yup.object().shape({
     name: Yup.string().required()

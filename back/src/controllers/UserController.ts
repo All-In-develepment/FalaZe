@@ -35,6 +35,8 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
+  console.log("teste");
+
   const {
     email,
     password,
@@ -73,6 +75,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     action: "create",
     user
   });
+  console.log(bodyCompanyId, userCompanyId);
 
   return res.status(200).json(user);
 };
