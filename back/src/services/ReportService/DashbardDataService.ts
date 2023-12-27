@@ -21,6 +21,7 @@ export interface Params {
   date_from?: string;
   date_to?: string;
   tagName?: string;
+  companyId?: string;
 }
 
 export default async function DashboardDataService(
@@ -138,34 +139,6 @@ export default async function DashboardDataService(
     where += ` and tt."finishedAt" <= ?`;
     replacements.push(`${params.date_to} 23:59:59`);
   }
-
-  // if (_.has(params, "tagName")) {
-  //   // const { id } = await Tag.findOne({where: {name: params.tagName}})
-  //   // query.replace('--tochange', `where "tagId" = '${id}'`)
-  //   query.replace('--tochange', `where "tagId" = '7'`)
-  //   console.log("oi");
-
-  //   const dashBoardTag = await DashBoardTagService(params);
-  //   if (dashBoardTag) {
-  //     query.replace(
-  //       `select count(distinct "id")
-  //       from "Tickets"
-  //       where status like 'open' and "companyId" = ?`,
-  //       `select count(*)
-  //       from "TicketTags"
-  //       where "tagId" = '7'`
-  //     );
-  //     replacements.push(params.tagName);
-  //   }
-  //   query.replace(
-  //     `select count(distinct "id")
-  //     from "Tickets"
-  //     where status like 'open' and "companyId" = ?`,
-  //     `select COUNT(*)
-  //      from "TicketTags"`
-  //   );
-  //   replacements.push(params.tagName);
-  // }
 
   replacements.push(companyId);
   replacements.push(companyId);

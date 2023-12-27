@@ -23,6 +23,7 @@ export const ReportService = async ({
           }
         }
       });
+
       return count;
     } else if (tagName.toLowerCase() === "todos") {
       const count = await TicketTag.count();

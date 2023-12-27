@@ -9,13 +9,15 @@ export const asaasPayments = async (
   try {
     const { invoiceId } = req.body;
 
-    console.log(invoiceId);
+    console.log(req.body);
 
-    const create = await createPayment(invoiceId);
+    // console.log(invoiceId);
 
-    console.log(create);
+    // const create = await createPayment(invoiceId);
 
-    return res.status(200).json(create);
+    // console.log(create);
+
+    // return res.status(200).json(create);
   } catch (error) {
     return error;
   }

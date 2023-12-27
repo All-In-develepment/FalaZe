@@ -27,7 +27,15 @@ const useDashboard = () => {
       params,
     });
 
-    console.log(data);
+    return data;
+  };
+
+  const getAttendants = async (params) => {
+    const { data } = await api.request({
+      url: `/dashboard/attendants`,
+      method: "GET",
+      params,
+    });
     return data;
   };
 
@@ -35,6 +43,7 @@ const useDashboard = () => {
     find,
     findTag,
     getNumberTags,
+    getAttendants,
   };
 };
 
