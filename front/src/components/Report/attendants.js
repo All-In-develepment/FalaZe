@@ -140,10 +140,10 @@ export const Attendants = () => {
       }),
       datasets: [
         {
-          label: property,
+          label: property === "closed" ? "Fechados" : "Abertos",
           data: sortedDates.map((date) => Number(data[date])),
-          fill: false,
-          backgroundColor: "rgb(75, 192, 192)",
+          fill: true,
+          backgroundColor: "rgba(118, 120, 237, 0.7)",
           borderColor: "rgb(75, 192, 192)",
         },
       ],
@@ -236,7 +236,7 @@ export const Attendants = () => {
   return (
     <MainContainer>
       <MainHeader>
-        <Title>Atendimentos</Title>
+        <Title>Atendentes</Title>
       </MainHeader>
       <Container maxWidth="lg" className={classes.container}>
         <Grid container spacing={2} justifyContent="flex-end">
@@ -284,12 +284,23 @@ export const Attendants = () => {
             </ButtonWithSpinner>
           </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid>
           {userData && (
             <div>
               <h2>{`Gráficos para ${selectedUser}`}</h2>
-              <Bar data={createChartData("closed")} options={options} />
-              <Bar data={createChartData("open")} options={options} />
+              <Grid
+                container
+                spacing={6}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Grid item xs={12} sm={12} md={6}>
+                <Bar data={createChartData("closed")} options={options} />
+                </Grid>
+                <Grid item xs={12} sm={12} md={6}>
+                <Bar data={createChartData("open")} options={options} />
+                </Grid>
+              </Grid>
             </div>
           )}
         </Grid>
