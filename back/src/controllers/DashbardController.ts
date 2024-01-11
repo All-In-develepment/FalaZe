@@ -17,6 +17,8 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     params
   );
 
+  console.log(params, dashboardData);
+
   return res.status(200).json(dashboardData);
 };
 
@@ -40,6 +42,7 @@ export const dashBoardAttendants = async (
     date_to,
     companyId
   });
+  console.log(attendants);
 
   return res.status(200).json(attendants);
 };

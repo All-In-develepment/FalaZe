@@ -41,8 +41,6 @@ const UpdateTicketService = async ({
   ticketId,
   companyId
 }: Request): Promise<Response> => {
-  console.log("oi");
-
   try {
     const { status } = ticketData;
     let { queueId, userId } = ticketData;

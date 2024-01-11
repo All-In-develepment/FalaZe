@@ -8,10 +8,11 @@ interface PlanData {
   connections?: number;
   queues?: number;
   value?: number;
+  isVisible?: boolean;
 }
 
 const UpdatePlanService = async (planData: PlanData): Promise<Plan> => {
-  const { id, name, users, connections, queues, value } = planData;
+  const { id, name, users, connections, queues, value, isVisible } = planData;
 
   const plan = await Plan.findByPk(id);
 
@@ -24,7 +25,8 @@ const UpdatePlanService = async (planData: PlanData): Promise<Plan> => {
     users,
     connections,
     queues,
-    value
+    value,
+    isVisible
   });
 
   return plan;

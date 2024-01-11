@@ -5,6 +5,7 @@ import User from "../../models/User";
 import { Params } from "./DashbardDataService";
 import sequelize from "../../database";
 import Ticket from "../../models/Ticket";
+import TicketTraking from "../../models/TicketTraking";
 
 interface IAttendants extends User {
   id: number;
@@ -13,6 +14,12 @@ interface IAttendants extends User {
   closedTickets: string;
   openedTickets: string;
   ticketData: IDataTickets[];
+  timingTicket: ITimingTicket;
+}
+
+interface ITimingTicket {
+  total_diff_started_created: string;
+  total_diff_finished_started: string;
 }
 
 interface IDataTickets {
@@ -108,7 +115,9 @@ export const DashboardAttendantsService = async ({
           ],
           where: {
             userId: userId,
-            [Op.and]: Sequelize.literal(`${conditionAttendants}`)
+            [Op.and]: Sequelize.literal(
+              `${conditionAttendants}  AND "companyId" = ${companyId}`
+            )
           },
           group: [
             Sequelize.fn("DATE", Sequelize.col("createdAt")),
@@ -123,9 +132,46 @@ export const DashboardAttendantsService = async ({
           raw: true
         });
 
+        const resultTiming = await TicketTraking.findOne({
+          attributes: [
+            [
+              Sequelize.literal(
+                `(
+                  SUM(EXTRACT(EPOCH FROM
+                  ("startedAt" - "createdAt")) / 60)
+                )`
+              ),
+              "total_diff_started_created"
+            ],
+            [
+              Sequelize.literal(
+                `(
+                  SUM(EXTRACT(EPOCH FROM
+                  ("finishedAt" - "startedAt")) / 60)
+                )`
+              ),
+              "total_diff_finished_started"
+            ]
+          ],
+          where: {
+            userId: userId,
+            [Op.and]: Sequelize.literal(
+              `${conditionAttendants} AND "companyId" = ${companyId}`
+            )
+          },
+          replacements: {
+            dateFrom: dateFrom || null,
+            dateTo: dateTo || null,
+            days: days || null
+          },
+          raw: true
+        });
+
         const user = users.find(user => user.id === userId) as IAttendants;
 
         const dataTicket = result as unknown as IDataTickets[];
+
+        const timingTicket = resultTiming as unknown as ITimingTicket;
 
         if (user) {
           const organizedResult = dataTicket.reduce((acc, entry) => {
@@ -141,6 +187,7 @@ export const DashboardAttendantsService = async ({
           }, {});
 
           user.ticketData = organizedResult as IDataTickets[];
+          user.timingTicket = timingTicket;
         }
 
         return user;

@@ -8,6 +8,7 @@ interface PlanData {
   connections: number;
   queues: number;
   value: number;
+  isVisible: boolean;
 }
 
 const CreatePlanService = async (planData: PlanData): Promise<Plan> => {
