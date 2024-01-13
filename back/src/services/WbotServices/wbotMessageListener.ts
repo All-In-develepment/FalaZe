@@ -87,8 +87,25 @@ const isNumeric = (value: string) => /^-?\d+$/.test(value);
 
 const writeFileAsync = promisify(writeFile);
 
-const getTypeMessage = (msg: proto.IWebMessageInfo): string => {
-  return getContentType(msg.message);
+// const getTypeMessage = (msg: proto.IWebMessageInfo): string => {
+//   return getContentType(msg.message);
+// };
+
+const getTypeMessage = (message: proto.IWebMessageInfo) => {
+  if (message) {
+    const type = Object.keys(message.message);
+
+    let restype =
+      (!["senderKeyDistributionMessage", "messageContextInfo"].includes(
+        type[0]
+      ) &&
+        type[0]) || // Sometimes message in the front
+      (type.length >= 3 && type[1] !== "messageContextInfo" && type[1]) || // Sometimes message in midle if mtype length is greater than or equal to 3
+      type[type.length - 1] ||
+      Object.keys(message)[0];
+    // common case
+    return restype;
+  }
 };
 
 function validaCpfCnpj(val) {
@@ -350,10 +367,6 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
   try {
     let type = getTypeMessage(msg);
 
-    const test = normalizeMessageContent(msg.message);
-
-    console.log(test);
-
     const types = {
       conversation: msg.message.conversation,
       imageMessage: msg.message.imageMessage?.caption,
@@ -389,7 +402,10 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
       reactionMessage: msg.message.reactionMessage?.text || "reaction",
       senderKeyDistributionMessage:
         msg.message.senderKeyDistributionMessage
-          ?.axolotlSenderKeyDistributionMessage
+          ?.axolotlSenderKeyDistributionMessage,
+      viewOnceMessageV2:
+        msg.message.viewOnceMessageV2.message.imageMessage?.caption ||
+        msg.message.viewOnceMessageV2.message.videoMessage?.caption
     };
 
     /* console.log(msg); */
@@ -481,7 +497,10 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
     msg.message?.videoMessage ||
     msg.message?.stickerMessage ||
     msg.message?.documentMessage ||
-    msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage;
+    msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+      ?.imageMessage ||
+    msg.message?.viewOnceMessageV2?.message?.imageMessage ||
+    msg.message?.viewOnceMessageV2?.message?.videoMessage;
 
   const messageType = msg.message?.documentMessage
     ? "document"
@@ -508,7 +527,9 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
           msg.message?.templateMessage?.fourRowTemplate?.imageMessage ||
           msg.message?.templateMessage?.hydratedTemplate?.imageMessage ||
           msg.message?.templateMessage?.hydratedFourRowTemplate?.imageMessage ||
-          msg.message?.interactiveMessage?.header?.imageMessage,
+          msg.message?.interactiveMessage?.header?.imageMessage ||
+          msg.message?.viewOnceMessageV2?.message?.imageMessage ||
+          msg.message?.viewOnceMessageV2?.message?.videoMessage,
         messageType
       );
     } catch (error) {
@@ -764,7 +785,7 @@ const isValidMsg = (msg: proto.IWebMessageInfo): boolean => {
       msgType === "protocolMessage" ||
       msgType === "listResponseMessage" ||
       msgType === "listMessage" ||
-      msgType === "viewOnceMessage";
+      msgType === "viewOnceMessageV2";
 
     if (!ifType) {
       logger.warn(`#### Nao achou o type em isValidMsg: ${msgType}
@@ -1838,7 +1859,8 @@ const handleMessage = async (
       msg.message?.imageMessage ||
       msg.message?.videoMessage ||
       msg.message?.documentMessage ||
-      msg.message.stickerMessage;
+      msg.message.stickerMessage ||
+      msg.message?.viewOnceMessageV2;
     if (msg.key.fromMe) {
       if (/\u200e/.test(bodyMessage)) return;
 
