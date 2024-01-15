@@ -120,7 +120,7 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
             );
             if (requiresPatch) {
               message = {
-                viewOnceMessage: {
+                viewOnceMessageV2: {
                   message: {
                     messageContextInfo: {
                       deviceListMetadataVersion: 2,

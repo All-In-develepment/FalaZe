@@ -404,8 +404,8 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
         msg.message.senderKeyDistributionMessage
           ?.axolotlSenderKeyDistributionMessage,
       viewOnceMessageV2:
-        msg.message.viewOnceMessageV2.message.imageMessage?.caption ||
-        msg.message.viewOnceMessageV2.message.videoMessage?.caption
+        msg.message?.viewOnceMessageV2?.message.imageMessage?.caption ||
+        msg.message?.viewOnceMessageV2?.message.videoMessage?.caption
     };
 
     /* console.log(msg); */
@@ -707,6 +707,12 @@ export const verifyMessage = async (
   const io = getIO();
   const quotedMsg = await verifyQuotedMessage(msg);
   const body = getBodyMessage(msg);
+
+  if (!msg.key.fromMe && contact.name === msg.key.remoteJid.split("@", 1)[0]) {
+    await contact.update({
+      name: msg.pushName ? msg.pushName : msg.key.remoteJid.split("@", 1)[0]
+    });
+  }
 
   const messageData = {
     id: msg.key.id,
