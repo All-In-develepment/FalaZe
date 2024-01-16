@@ -4,7 +4,7 @@ import ContactListItem from "../../models/ContactListItem";
 import { logger } from "../../utils/logger";
 import CheckContactNumber from "../WbotServices/CheckNumber";
 
-interface Data {
+export interface Data {
   name: string;
   number: string;
   contactListId: number;
@@ -14,6 +14,8 @@ interface Data {
 
 const CreateService = async (data: Data): Promise<ContactListItem> => {
   const { name } = data;
+
+  console.log({ data });
 
   const contactListItemSchema = Yup.object().shape({
     name: Yup.string()

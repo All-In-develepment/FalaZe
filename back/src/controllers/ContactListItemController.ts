@@ -3,7 +3,9 @@ import { Request, Response } from "express";
 import { getIO } from "../libs/socket";
 
 import ListService from "../services/ContactListItemService/ListService";
-import CreateService from "../services/ContactListItemService/CreateService";
+import CreateService, {
+  Data
+} from "../services/ContactListItemService/CreateService";
 import ShowService from "../services/ContactListItemService/ShowService";
 import UpdateService from "../services/ContactListItemService/UpdateService";
 import DeleteService from "../services/ContactListItemService/DeleteService";
@@ -12,6 +14,7 @@ import FindService from "../services/ContactListItemService/FindService";
 import ContactListItem from "../models/ContactListItem";
 
 import AppError from "../errors/AppError";
+import { CreateServiceFromContacts } from "../services/ContactListItemService/CreateServiceFromContacts";
 
 type IndexQuery = {
   searchParam: string;
@@ -142,4 +145,16 @@ export const findList = async (
   const records: ContactListItem[] = await FindService(params);
 
   return res.status(200).json(records);
+};
+
+export const createListItemFromContacts = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const data = req.body as Data[];
+  console.log(data);
+
+  CreateServiceFromContacts(data);
+
+  return res.status(200).json();
 };
