@@ -406,7 +406,10 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
       viewOnceMessageV2:
         msg.message?.viewOnceMessageV2?.message.imageMessage?.caption ||
         msg.message?.viewOnceMessageV2?.message.videoMessage?.caption,
-      viewOnceMessageV2Extension: "Áudio"
+      viewOnceMessageV2Extension: "Áudio",
+      editedMessage:
+        msg.message?.editedMessage?.message.protocolMessage.editedMessage
+          .conversation
     };
 
     /* console.log(msg); */
@@ -795,7 +798,8 @@ const isValidMsg = (msg: proto.IWebMessageInfo): boolean => {
       msgType === "listResponseMessage" ||
       msgType === "listMessage" ||
       msgType === "viewOnceMessageV2" ||
-      msgType === "viewOnceMessageV2Extension";
+      msgType === "viewOnceMessageV2Extension" ||
+      msgType === "editedMessage";
 
     if (!ifType) {
       logger.warn(`#### Nao achou o type em isValidMsg: ${msgType}
