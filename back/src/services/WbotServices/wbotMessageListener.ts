@@ -405,7 +405,8 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
           ?.axolotlSenderKeyDistributionMessage,
       viewOnceMessageV2:
         msg.message?.viewOnceMessageV2?.message.imageMessage?.caption ||
-        msg.message?.viewOnceMessageV2?.message.videoMessage?.caption
+        msg.message?.viewOnceMessageV2?.message.videoMessage?.caption,
+      viewOnceMessageV2Extension: "Áudio"
     };
 
     /* console.log(msg); */
@@ -500,7 +501,8 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
     msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
       ?.imageMessage ||
     msg.message?.viewOnceMessageV2?.message?.imageMessage ||
-    msg.message?.viewOnceMessageV2?.message?.videoMessage;
+    msg.message?.viewOnceMessageV2?.message?.videoMessage ||
+    msg.message?.viewOnceMessageV2Extension?.message?.audioMessage;
 
   const messageType = msg.message?.documentMessage
     ? "document"
@@ -529,7 +531,8 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
           msg.message?.templateMessage?.hydratedFourRowTemplate?.imageMessage ||
           msg.message?.interactiveMessage?.header?.imageMessage ||
           msg.message?.viewOnceMessageV2?.message?.imageMessage ||
-          msg.message?.viewOnceMessageV2?.message?.videoMessage,
+          msg.message?.viewOnceMessageV2?.message?.videoMessage ||
+          msg.message?.viewOnceMessageV2Extension?.message?.audioMessage,
         messageType
       );
     } catch (error) {
@@ -791,7 +794,8 @@ const isValidMsg = (msg: proto.IWebMessageInfo): boolean => {
       msgType === "protocolMessage" ||
       msgType === "listResponseMessage" ||
       msgType === "listMessage" ||
-      msgType === "viewOnceMessageV2";
+      msgType === "viewOnceMessageV2" ||
+      msgType === "viewOnceMessageV2Extension";
 
     if (!ifType) {
       logger.warn(`#### Nao achou o type em isValidMsg: ${msgType}
@@ -1866,7 +1870,8 @@ const handleMessage = async (
       msg.message?.videoMessage ||
       msg.message?.documentMessage ||
       msg.message.stickerMessage ||
-      msg.message?.viewOnceMessageV2;
+      msg.message?.viewOnceMessageV2 ||
+      msg.message?.viewOnceMessageV2Extension;
     if (msg.key.fromMe) {
       if (/\u200e/.test(bodyMessage)) return;
 
