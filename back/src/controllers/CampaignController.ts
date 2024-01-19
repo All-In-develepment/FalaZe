@@ -176,7 +176,6 @@ export const mediaUpload = async (
   const { id } = req.params;
   const files = req.files as Express.Multer.File[];
   const file = head(files);
-  console.log(file);
 
   try {
     const campaign = await Campaign.findByPk(id);
