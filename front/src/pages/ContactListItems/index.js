@@ -31,6 +31,7 @@ import api from "../../services/api";
 import TableRowSkeleton from "../../components/TableRowSkeleton";
 import ContactListItemModal from "../../components/ContactListItemModal";
 import ConfirmationModal from "../../components/ConfirmationModal/";
+import { ImportContactListModal } from "../../components/ContactListItemModal/importContactListModal";
 
 import { i18n } from "../../translate/i18n";
 import MainHeader from "../../components/MainHeader";
@@ -111,6 +112,8 @@ const ContactListItems = () => {
   const [contacts, dispatch] = useReducer(reducer, []);
   const [selectedContactId, setSelectedContactId] = useState(null);
   const [contactListItemModalOpen, setContactListItemModalOpen] =
+    useState(false);
+  const [importContactListItemModalOpen, setImportContactListItemModalOpen] =
     useState(false);
   const [deletingContact, setDeletingContact] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -245,6 +248,18 @@ const ContactListItems = () => {
     history.push("/contact-lists");
   };
 
+  const handleImportContactListModal = () => {
+    setImportContactListItemModalOpen(true);
+  };
+
+  const importContactListModalCLose = () => {
+    setImportContactListItemModalOpen(false);
+  };
+
+  const updateContacts = (updatedContacts) => {
+    dispatch({ type: "LOAD_CONTACTS", payload: updatedContacts });
+  };
+
   return (
     <MainContainer className={classes.mainContainer}>
       <ContactListItemModal
@@ -253,6 +268,13 @@ const ContactListItems = () => {
         aria-labelledby="form-dialog-title"
         contactId={selectedContactId}
       ></ContactListItemModal>
+
+      <ImportContactListModal
+        open={importContactListItemModalOpen}
+        onClose={importContactListModalCLose}
+        updateContacts={updateContacts}
+      />
+
       <ConfirmationModal
         title={
           deletingContact
@@ -287,7 +309,7 @@ const ContactListItems = () => {
           </Grid>
           <Grid xs={12} sm={7} item>
             <Grid spacing={2} container>
-              <Grid xs={12} sm={6} item>
+              <Grid xs={12} sm={4} item>
                 <TextField
                   fullWidth
                   placeholder={i18n.t("contactListItems.searchPlaceholder")}
@@ -311,6 +333,16 @@ const ContactListItems = () => {
                   onClick={goToContactLists}
                 >
                   {i18n.t("contactListItems.buttons.lists")}
+                </Button>
+              </Grid>
+              <Grid xs={4} sm={2} item>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  onClick={handleImportContactListModal}
+                >
+                  {i18n.t("contactListItems.buttons.importFromContacts")}
                 </Button>
               </Grid>
               <Grid xs={4} sm={2} item>

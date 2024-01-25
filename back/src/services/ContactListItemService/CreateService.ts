@@ -15,11 +15,9 @@ export interface Data {
 const CreateService = async (data: Data): Promise<ContactListItem> => {
   const { name } = data;
 
-  console.log({ data });
-
   const contactListItemSchema = Yup.object().shape({
     name: Yup.string()
-      .min(3, "ERR_CONTACTLISTITEM_INVALID_NAME")
+      .min(2, "ERR_CONTACTLISTITEM_INVALID_NAME")
       .required("ERR_CONTACTLISTITEM_REQUIRED")
   });
 

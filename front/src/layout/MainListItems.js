@@ -231,7 +231,17 @@ const MainListItems = (props) => {
         )}
       />
 
-      <ListItemLink to="/reports" primary="Relatório" icon={<NotesIcon />} />
+      <Can
+        role={user.profile}
+        perform="report:view"
+        yes={() => (
+          <ListItemLink
+            to="/reports"
+            primary="Relatório"
+            icon={<NotesIcon />}
+          />
+        )}
+      />
 
       <ListItemLink
         to="/tickets"

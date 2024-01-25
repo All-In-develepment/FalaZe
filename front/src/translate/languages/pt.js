@@ -378,6 +378,7 @@ const messages = {
           edit: "Editar",
           cancel: "Cancelar",
         },
+        confirmation: "Lista Criada",
         confirmationModal: {
           deleteTitle: "Excluir",
           deleteMessage: "Esta ação não pode ser revertida.",
@@ -393,6 +394,7 @@ const messages = {
           add: "Novo",
           lists: "Listas",
           import: "Importar",
+          importFromContacts: "Agenda",
         },
         dialog: {
           name: "Nome",

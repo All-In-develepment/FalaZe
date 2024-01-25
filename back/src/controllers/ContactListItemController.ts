@@ -152,9 +152,8 @@ export const createListItemFromContacts = async (
   res: Response
 ): Promise<Response> => {
   const data = req.body as Data[];
-  console.log(data);
 
-  CreateServiceFromContacts(data);
+  const response = await CreateServiceFromContacts(data);
 
-  return res.status(200).json();
+  return res.status(200).json(response);
 };
