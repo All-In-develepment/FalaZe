@@ -17,7 +17,8 @@ import {
   WAMessage,
   BinaryNode,
   WAMessageStubType,
-  WAMessageUpdate
+  WAMessageUpdate,
+  normalizeMessageContent
 } from "@whiskeysockets/baileys";
 import Contact from "../../models/Contact";
 import Ticket from "../../models/Ticket";
@@ -348,6 +349,10 @@ const msgLocation = (image, latitude, longitude) => {
 export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
   try {
     let type = getTypeMessage(msg);
+
+    const test = normalizeMessageContent(msg.message);
+
+    console.log(test);
 
     const types = {
       conversation: msg.message.conversation,
