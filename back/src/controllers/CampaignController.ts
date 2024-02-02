@@ -180,7 +180,7 @@ export const mediaUpload = async (
   try {
     const campaign = await Campaign.findByPk(id);
     campaign.mediaPath = file.filename;
-    campaign.mediaName = file.originalname;
+    // campaign.mediaName = file.originalname;
     await campaign.save();
     return res.send({ mensagem: "Mensagem enviada" });
   } catch (err: any) {

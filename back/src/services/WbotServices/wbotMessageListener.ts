@@ -87,8 +87,25 @@ const isNumeric = (value: string) => /^-?\d+$/.test(value);
 
 const writeFileAsync = promisify(writeFile);
 
-const getTypeMessage = (msg: proto.IWebMessageInfo): string => {
-  return getContentType(msg.message);
+// const getTypeMessage = (msg: proto.IWebMessageInfo): string => {
+//   return getContentType(msg.message);
+// };
+
+const getTypeMessage = (message: proto.IWebMessageInfo) => {
+  if (message) {
+    const type = Object.keys(message.message);
+
+    let restype =
+      (!["senderKeyDistributionMessage", "messageContextInfo"].includes(
+        type[0]
+      ) &&
+        type[0]) || // Sometimes message in the front
+      (type.length >= 3 && type[1] !== "messageContextInfo" && type[1]) || // Sometimes message in midle if mtype length is greater than or equal to 3
+      type[type.length - 1] ||
+      Object.keys(message)[0];
+    // common case
+    return restype;
+  }
 };
 
 function validaCpfCnpj(val) {
@@ -346,6 +363,49 @@ const msgLocation = (image, latitude, longitude) => {
   }
 };
 
+const getEphemeralMessage = (msg: proto.IWebMessageInfo) => {
+  if (msg.message.ephemeralMessage) {
+    const message = msg.message?.ephemeralMessage?.message;
+
+    let body;
+
+    body =
+      message?.conversation ||
+      message?.imageMessage?.caption ||
+      message?.videoMessage?.caption ||
+      message?.extendedTextMessage?.text ||
+      message?.viewOnceMessage?.message.imageMessage?.caption ||
+      message?.viewOnceMessage?.message.videoMessage?.caption ||
+      message?.viewOnceMessageV2?.message.imageMessage?.caption ||
+      message?.viewOnceMessageV2?.message.videoMessage?.caption ||
+      message?.buttonsResponseMessage?.selectedButtonId ||
+      message?.templateButtonReplyMessage?.selectedId ||
+      message?.buttonsResponseMessage?.selectedButtonId ||
+      message?.listResponseMessage?.title ||
+      // msgLocation(
+      //   message?.locationMessage?.jpegThumbnail,
+      //   message?.locationMessage?.degreesLatitude,
+      //   message?.locationMessage?.degreesLongitude
+      // ) ||
+      // `Latitude: ${message.liveLocationMessage?.degreesLatitude} - Longitude: ${message.liveLocationMessage?.degreesLongitude}` ||
+      message?.documentMessage?.title ||
+      getBodyList(msg) ||
+      message.listResponseMessage?.title ||
+      message?.listResponseMessage?.singleSelectReply?.selectedRowId ||
+      message?.reactionMessage?.text ||
+      message?.senderKeyDistributionMessage
+        ?.axolotlSenderKeyDistributionMessage ||
+      message?.editedMessage?.message.protocolMessage.editedMessage
+        .conversation ||
+      msg.message?.ephemeralMessage?.message?.documentMessage ||
+      msg.message?.ephemeralMessage?.message?.stickerMessage ||
+      "";
+
+    return body;
+  }
+  return undefined;
+};
+
 export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
   try {
     let type = getTypeMessage(msg);
@@ -368,9 +428,14 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
         msg.message.listResponseMessage?.title,
       buttonsMessage:
         getBodyButton(msg) || msg.message.buttonsMessage?.contentText,
+      // viewOnceMessage:
+      //   getBodyButton(msg) ||
+      //   msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId,
       viewOnceMessage:
         getBodyButton(msg) ||
-        msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId,
+        msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId ||
+        msg.message?.viewOnceMessage?.message.imageMessage?.caption ||
+        msg.message?.viewOnceMessage?.message.videoMessage?.caption,
       stickerMessage: "sticker",
       contactMessage: msg.message?.contactMessage?.vcard,
       contactsArrayMessage: "varios contatos",
@@ -389,7 +454,15 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
       reactionMessage: msg.message.reactionMessage?.text || "reaction",
       senderKeyDistributionMessage:
         msg.message.senderKeyDistributionMessage
-          ?.axolotlSenderKeyDistributionMessage
+          ?.axolotlSenderKeyDistributionMessage,
+      viewOnceMessageV2:
+        msg.message?.viewOnceMessageV2?.message.imageMessage?.caption ||
+        msg.message?.viewOnceMessageV2?.message.videoMessage?.caption,
+      viewOnceMessageV2Extension: "Áudio",
+      editedMessage:
+        msg.message?.editedMessage?.message.protocolMessage.editedMessage
+          .conversation,
+      ephemeralMessage: getEphemeralMessage(msg)
     };
 
     /* console.log(msg); */
@@ -481,7 +554,28 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
     msg.message?.videoMessage ||
     msg.message?.stickerMessage ||
     msg.message?.documentMessage ||
-    msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.imageMessage;
+    msg.message?.extendedTextMessage?.contextInfo?.quotedMessage
+      ?.imageMessage ||
+    msg.message?.viewOnceMessage?.message?.imageMessage ||
+    msg.message?.viewOnceMessage?.message?.videoMessage ||
+    msg.message?.viewOnceMessageV2?.message?.imageMessage ||
+    msg.message?.viewOnceMessageV2?.message?.videoMessage ||
+    msg.message?.viewOnceMessageV2Extension?.message?.audioMessage ||
+    msg.message?.ephemeralMessage?.message?.viewOnceMessage?.message
+      ?.imageMessage ||
+    msg.message?.ephemeralMessage?.message?.viewOnceMessage?.message
+      ?.videoMessage ||
+    msg.message?.ephemeralMessage?.message?.viewOnceMessageV2?.message
+      ?.imageMessage ||
+    msg.message?.ephemeralMessage?.message?.viewOnceMessageV2?.message
+      ?.videoMessage ||
+    msg.message?.ephemeralMessage?.message?.viewOnceMessageV2Extension?.message
+      ?.audioMessage ||
+    msg.message?.ephemeralMessage?.message?.audioMessage ||
+    msg.message?.ephemeralMessage?.message?.imageMessage ||
+    msg.message?.ephemeralMessage?.message?.videoMessage ||
+    msg.message?.ephemeralMessage?.message?.documentMessage ||
+    msg.message?.ephemeralMessage?.message?.stickerMessage;
 
   const messageType = msg.message?.documentMessage
     ? "document"
@@ -508,7 +602,25 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
           msg.message?.templateMessage?.fourRowTemplate?.imageMessage ||
           msg.message?.templateMessage?.hydratedTemplate?.imageMessage ||
           msg.message?.templateMessage?.hydratedFourRowTemplate?.imageMessage ||
-          msg.message?.interactiveMessage?.header?.imageMessage,
+          msg.message?.interactiveMessage?.header?.imageMessage ||
+          msg.message?.viewOnceMessage?.message?.imageMessage ||
+          msg.message?.viewOnceMessage?.message?.videoMessage ||
+          msg.message?.viewOnceMessageV2?.message?.imageMessage ||
+          msg.message?.viewOnceMessageV2?.message?.videoMessage ||
+          msg.message?.viewOnceMessageV2Extension?.message?.audioMessage ||
+          msg.message?.ephemeralMessage?.message?.viewOnceMessage?.message
+            ?.imageMessage ||
+          msg.message?.ephemeralMessage?.message?.viewOnceMessage?.message
+            ?.videoMessage ||
+          msg.message?.ephemeralMessage?.message?.viewOnceMessageV2?.message
+            ?.imageMessage ||
+          msg.message?.ephemeralMessage?.message?.viewOnceMessageV2?.message
+            ?.videoMessage ||
+          msg.message?.ephemeralMessage?.message?.viewOnceMessageV2Extension
+            ?.message?.audioMessage ||
+          msg.message?.ephemeralMessage?.message?.audioMessage ||
+          msg.message?.ephemeralMessage?.message?.imageMessage ||
+          msg.message?.ephemeralMessage?.message?.videoMessage,
         messageType
       );
     } catch (error) {
@@ -687,6 +799,12 @@ export const verifyMessage = async (
   const quotedMsg = await verifyQuotedMessage(msg);
   const body = getBodyMessage(msg);
 
+  if (!msg.key.fromMe && contact.name === msg.key.remoteJid.split("@", 1)[0]) {
+    await contact.update({
+      name: msg.pushName ? msg.pushName : msg.key.remoteJid.split("@", 1)[0]
+    });
+  }
+
   const messageData = {
     id: msg.key.id,
     ticketId: ticket.id,
@@ -764,7 +882,10 @@ const isValidMsg = (msg: proto.IWebMessageInfo): boolean => {
       msgType === "protocolMessage" ||
       msgType === "listResponseMessage" ||
       msgType === "listMessage" ||
-      msgType === "viewOnceMessage";
+      msgType === "viewOnceMessage" ||
+      msgType === "viewOnceMessageV2" ||
+      msgType === "viewOnceMessageV2Extension" ||
+      msgType === "editedMessage";
 
     if (!ifType) {
       logger.warn(`#### Nao achou o type em isValidMsg: ${msgType}
@@ -1838,7 +1959,25 @@ const handleMessage = async (
       msg.message?.imageMessage ||
       msg.message?.videoMessage ||
       msg.message?.documentMessage ||
-      msg.message.stickerMessage;
+      msg.message.stickerMessage ||
+      msg.message?.viewOnceMessage ||
+      msg.message?.viewOnceMessageV2 ||
+      msg.message?.viewOnceMessageV2Extension ||
+      msg.message?.ephemeralMessage?.message.audioMessage ||
+      msg.message?.ephemeralMessage?.message.imageMessage ||
+      msg.message?.ephemeralMessage?.message.videoMessage ||
+      msg.message?.ephemeralMessage?.message?.viewOnceMessage?.message
+        ?.imageMessage ||
+      msg.message?.ephemeralMessage?.message?.viewOnceMessage?.message
+        ?.videoMessage ||
+      msg.message?.ephemeralMessage?.message?.viewOnceMessageV2?.message
+        ?.imageMessage ||
+      msg.message?.ephemeralMessage?.message?.viewOnceMessageV2?.message
+        ?.videoMessage ||
+      msg.message?.ephemeralMessage?.message?.viewOnceMessageV2Extension
+        ?.message?.audioMessage ||
+      msg.message?.ephemeralMessage?.message?.documentMessage ||
+      msg.message?.ephemeralMessage?.message?.stickerMessage;
     if (msg.key.fromMe) {
       if (/\u200e/.test(bodyMessage)) return;
 

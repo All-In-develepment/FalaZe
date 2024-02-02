@@ -12,7 +12,7 @@ export type MessageData = {
   number: string;
   body: string;
   mediaPath?: string;
-  whatsappId?: number;
+  companyId?: number;
 };
 
 export const SendMessage = async (
@@ -41,12 +41,12 @@ export const SendMessage = async (
       message = await wbot.sendMessage(chatId, { text: body });
     }
 
-    const companyId = 1;
-    const { number, whatsappId, body } = messageData;
+    const { number, body, companyId } = messageData;
+
     const contact = await CreateInfoAPIExternal({
       number,
       companyId,
-      whatsappId,
+      whatsappId: whatsapp.id,
       body
     });
     const ticket = await Ticket.findOne({ where: { contactId: contact.id } });

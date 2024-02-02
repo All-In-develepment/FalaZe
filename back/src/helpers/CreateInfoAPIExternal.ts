@@ -27,6 +27,7 @@ const CreateInfoAPIExternal = async ({
       companyId
     });
   }
+
   const unreadMessages = 0;
   let ticket = await Ticket.findOne({ where: { contactId: contact.id } });
 

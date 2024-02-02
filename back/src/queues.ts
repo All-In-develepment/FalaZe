@@ -75,7 +75,11 @@ async function handleSendMessage(job) {
     }
 
     const { whatsappId } = data;
-    const messageData: MessageData = { ...data.data, whatsappId };
+    const messageData: MessageData = {
+      ...data.data,
+      whatsappId,
+      companyId: whatsapp.companyId
+    };
 
     await SendMessage(whatsapp, messageData);
   } catch (e: any) {
@@ -136,7 +140,8 @@ async function handleSendScheduledMessage(job) {
 
     await SendMessage(whatsapp, {
       number: schedule.contact.number,
-      body: schedule.body
+      body: schedule.body,
+      companyId: schedule.companyId
     });
 
     await scheduleRecord?.update({

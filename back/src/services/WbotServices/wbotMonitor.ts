@@ -45,11 +45,11 @@ const wbotMonitor = async (
         });
 
         if (sendMsgCall.value === "disabled") {
-          await wbot.sendMessage(node.attrs.from, {
+          const number = `${node.attrs.from.split(":", 1)[0]}`;
+
+          await wbot.sendMessage(number + "@s.whatsapp.net", {
             text: "*Mensagem Automática:*\n\nAs chamadas de voz e vídeo estão desabilitas para esse WhatsApp, favor enviar uma mensagem de texto. Obrigado"
           });
-
-          const number = node.attrs.from.replace(/\D/g, "");
 
           const contact = await Contact.findOne({
             where: { companyId, number }
@@ -71,6 +71,7 @@ const wbotMonitor = async (
           const minutes = date.getMinutes();
 
           const body = `Chamada de voz/vídeo perdida às ${hours}:${minutes}`;
+
           const messageData = {
             id: content.attrs["call-id"],
             ticketId: ticket.id,

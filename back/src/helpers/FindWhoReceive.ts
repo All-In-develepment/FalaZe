@@ -5,22 +5,25 @@ import Whatsapp from "../models/Whatsapp";
 
 export const FindWhoReceive = async (id: string) => {
   try {
-    const { ticketId } = await Message.findByPk(id);
+    const message = await Message.findByPk(id);
 
-    const { whatsappId } = await Ticket.findByPk(ticketId);
+    if (message) {
+      const { whatsappId } = await Ticket.findByPk(message.ticketId);
 
-    const { session, webHook, token } = await Whatsapp.findByPk(whatsappId);
+      const { session, webHook, token } = await Whatsapp.findByPk(whatsappId);
 
-    const obj = JSON.parse(session);
-    const numberId: string = obj.creds.me.id;
+      const obj = JSON.parse(session);
+      const numberId: string = obj.creds.me.id;
 
-    const number = numberId.split(":", 1)[0];
+      const number = numberId.split(":", 1)[0];
 
-    return {
-      number,
-      token,
-      webHook
-    };
+      return {
+        number,
+        token,
+        webHook
+      };
+    }
+    return { number: "", webHook: "", token: "" };
   } catch (error) {
     throw new AppError("MESSAGE_NOT_FOUND");
   }
