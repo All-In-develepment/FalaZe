@@ -412,8 +412,6 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
 
     const test = normalizeMessageContent(msg.message);
 
-    console.log(test);
-
     const types = {
       conversation: msg.message.conversation,
       imageMessage: msg.message.imageMessage?.caption,

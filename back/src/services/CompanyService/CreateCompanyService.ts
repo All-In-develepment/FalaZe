@@ -246,8 +246,6 @@ const CreateCompanyService = async (
     }
   }
 
-  console.log(company.id);
-
   return company;
 };
 

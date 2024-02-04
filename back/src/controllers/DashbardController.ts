@@ -42,7 +42,6 @@ export const dashBoardAttendants = async (
     date_to,
     companyId
   });
-  console.log(attendants);
 
   return res.status(200).json(attendants);
 };
