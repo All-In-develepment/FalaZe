@@ -83,18 +83,15 @@ export function PlanManagerForm(props) {
   }, [initialValue]);
 
   const handleSubmit = async (data) => {
-    console.log({ data });
-
     onSubmit(data);
   };
-  console.log(record.isVisible);
 
   return (
     <Formik
       enableReinitialize
       className={classes.fullWidth}
       initialValues={record}
-      onSubmit={(values, { resetForm }) =>
+      onSubmit={(values, { resetForm, setFieldValue }) =>
         setTimeout(() => {
           handleSubmit(values);
           resetForm();
@@ -137,21 +134,27 @@ export function PlanManagerForm(props) {
               />
             </Grid>
             <Grid xs={12} sm={6} md={3} item>
-              <FormControlLabel
-                label={"Visível"}
-                labelPlacement="end"
-                control={
-                  <Switch
-                    checked={values.isVisible}
-                    size="medium"
-                    name="isVisible"
-                    color="primary"
+              <Field
+                name="isVisible"
+                render={({ field }) => (
+                  <FormControlLabel
+                    label={"Visível"}
+                    labelPlacement="end"
+                    control={
+                      <Switch
+                        {...field}
+                        checked={field.value}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          // Agora, você pode usar setFieldValue diretamente do formikProps
+                          values.setFieldValue("isVisible", e.target.checked);
+                        }}
+                        size="medium"
+                        color="primary"
+                      />
+                    }
                   />
-                  //   <Field
-                  //     as={Switch}
-                  //     checked={values.isVisible}
-                  //   />
-                }
+                )}
               />
             </Grid>
             <Grid xs={12} sm={6} md={4} item>
@@ -318,8 +321,6 @@ export default function PlansManager() {
   };
 
   const handleSubmit = async (data) => {
-    console.log("handle", data);
-
     const datanew = {
       id: data.id,
       connections: data.connections,
@@ -384,7 +385,7 @@ export default function PlansManager() {
       queues: data.queues || 0,
       value:
         data.value.toLocaleString("pt-br", { minimumFractionDigits: 2 }) || 0,
-      isVisible: data.isVisible || true,
+      isVisible: data.isVisible,
     });
   };
 
