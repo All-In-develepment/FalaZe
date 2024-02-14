@@ -4,7 +4,9 @@ import { createWebHookBilling } from "./CreateWebHookBilling";
 import { verifySandbox } from "./VerifySandbox";
 
 export const listWebHookBilling = async () => {
-  const api = verifySandbox();
+  const sandbox = "true";
+
+  const api = verifySandbox(sandbox);
 
   const { value: access_token } = await Setting.findOne({
     where: { key: "asaas" }

@@ -36,6 +36,7 @@ EXPOSE ${PORT}
 
 CMD npx sequelize db:migrate \
   && npm run dev:server
+  # && npx ts-node-dev --respawn --transpile-only --inspect=9229 src/server.ts
 # && npx sequelize db:seed:all \
 
 # CMD ["npm", "run", "dev:server"]

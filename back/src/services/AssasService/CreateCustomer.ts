@@ -5,7 +5,9 @@ import { verifySandbox } from "./VerifySandbox";
 
 export const createCustomer = async (access_token: string) => {
   try {
-    const api = verifySandbox();
+    const sandbox = "true";
+
+    const api = verifySandbox(sandbox);
 
     const {
       name,

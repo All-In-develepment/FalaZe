@@ -85,11 +85,14 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   } catch (err: any) {
     throw new AppError(err.message);
   }
-
-  await CheckIsValidContact(newContact.number, companyId);
-  const validNumber = await CheckContactNumber(newContact.number, companyId);
-  const number = validNumber.jid.replace(/\D/g, "");
-  newContact.number = number;
+  try {
+    await CheckIsValidContact(newContact.number, companyId);
+    const validNumber = await CheckContactNumber(newContact.number, companyId);
+    const number = validNumber.jid.replace(/\D/g, "");
+    newContact.number = number;
+  } catch (error) {
+    throw new AppError("Invalid number, please check the number.");
+  }
 
   /**
    * Código desabilitado por demora no retorno

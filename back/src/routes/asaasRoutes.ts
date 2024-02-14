@@ -11,5 +11,9 @@ asaasRoutes.post("/invoices/asaas", isAuth, AsaasController.asaasPayments);
 //   AsaasController.receivedPaymentAsaas
 // );
 asaasRoutes.post("/webhook/payment", AsaasController.receivedPaymentAsaas);
+asaasRoutes.post(
+  "/invoices/asaas/sub-account",
+  AsaasController.asaasCreateSubAccount
+);
 
 export default asaasRoutes;

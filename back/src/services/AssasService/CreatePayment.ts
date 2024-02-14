@@ -8,7 +8,8 @@ import { listWebHookBilling } from "./ListWebHookBilling";
 
 export const createPayment = async (id: string) => {
   try {
-    const api = verifySandbox();
+    const sandbox = "true";
+    const api = verifySandbox(sandbox);
 
     const { value: access_token } = await Setting.findOne({
       where: { key: "asaas" }

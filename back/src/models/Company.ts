@@ -22,6 +22,7 @@ import TicketTraking from "./TicketTraking";
 import User from "./User";
 import UserRating from "./UserRating";
 import Whatsapp from "./Whatsapp";
+import Affiliates from "./Affiliates";
 
 @Table
 class Company extends Model<Company> {
@@ -134,6 +135,13 @@ class Company extends Model<Company> {
     hooks: true
   })
   ticketTrankins: TicketTraking[];
+
+  @ForeignKey(() => Affiliates)
+  @Column
+  affiliateId: number;
+
+  @BelongsTo(() => Affiliates)
+  affiliate: Affiliates;
 }
 
 export default Company;

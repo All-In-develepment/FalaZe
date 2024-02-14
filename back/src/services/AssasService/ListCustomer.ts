@@ -8,7 +8,9 @@ interface IRequest {
 
 export const listCustomer = async ({ access_token, cpfCnpj }: IRequest) => {
   try {
-    const api = verifySandbox();
+    const sandbox = "true";
+
+    const api = verifySandbox(sandbox);
 
     const url = `${api}/customers?cpfCnpj=${cpfCnpj}`;
     const options = {
