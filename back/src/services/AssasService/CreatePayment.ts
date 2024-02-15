@@ -6,13 +6,21 @@ import { dateAdjustment } from "../../helpers/dateAdjustment";
 import { createCustomer } from "./CreateCustomer";
 import { listWebHookBilling } from "./ListWebHookBilling";
 
-export const createPayment = async (id: string) => {
+import dotenv from "dotenv";
+import Affiliates from "../../models/Affiliates";
+import Company from "../../models/Company";
+
+dotenv.config();
+
+export const createPayment = async (id: string, companyId: string) => {
   try {
-    const sandbox = "true";
+    const sandbox = process.env.ASAAS_SANDBOX;
+    const percentualValue = process.env.ASSAS_PERCENTUAL;
+
     const api = verifySandbox(sandbox);
 
     const { value: access_token } = await Setting.findOne({
-      where: { key: "asaas" }
+      where: { key: "asaas", companyId }
     });
 
     const invoice = await Invoices.findByPk(id);
@@ -23,7 +31,16 @@ export const createPayment = async (id: string) => {
 
     const [dueDate] = oldDate.split("T");
 
-    const customer = await createCustomer(access_token);
+    const customer = await createCustomer(access_token, sandbox, companyId);
+
+    const company = await Company.findByPk(companyId, {
+      include: [
+        {
+          model: Affiliates,
+          attributes: ["walletId"]
+        }
+      ]
+    });
 
     const url = `${api}/payments`;
 
@@ -38,7 +55,15 @@ export const createPayment = async (id: string) => {
       billingType: "UNDEFINED",
       customer,
       value,
-      dueDate
+      dueDate,
+      ...(company.affiliate && {
+        split: [
+          {
+            walletId: company.affiliate.walletId,
+            percentualValue
+          }
+        ]
+      })
     };
 
     await listWebHookBilling();

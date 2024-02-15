@@ -3,6 +3,7 @@ import AppError from "../../errors/AppError";
 import Company from "../../models/Company";
 import User from "../../models/User";
 import Setting from "../../models/Setting";
+import Affiliates from "../../models/Affiliates";
 
 interface CompanyData {
   name: string;
@@ -14,6 +15,7 @@ interface CompanyData {
   campaignsEnabled?: boolean;
   dueDate?: string;
   recurrence?: string;
+  affiliate?: string;
 }
 
 export interface ICreateSubscription extends CompanyData {
@@ -40,7 +42,8 @@ const CreateCompanyService = async (
     password,
     campaignsEnabled,
     dueDate,
-    recurrence
+    recurrence,
+    affiliate
   } = companyData;
 
   const companySchema = Yup.object().shape({
@@ -87,6 +90,13 @@ const CreateCompanyService = async (
     companyId: company.id
   });
 
+  const { value } = await Setting.findOne({
+    where: {
+      companyId: 1,
+      key: "asaas"
+    }
+  });
+
   await Setting.findOrCreate({
     where: {
       companyId: company.id,
@@ -95,7 +105,7 @@ const CreateCompanyService = async (
     defaults: {
       companyId: company.id,
       key: "asaas",
-      value: ""
+      value: value ?? ""
     }
   });
 
@@ -244,6 +254,16 @@ const CreateCompanyService = async (
     if (!created) {
       await setting.update({ value: `${campaignsEnabled}` });
     }
+  }
+
+  if (affiliate) {
+    const { id } = await Affiliates.findOne({
+      where: {
+        cpfCnpj: affiliate
+      }
+    });
+
+    await company.update({ affiliateId: id });
   }
 
   return company;

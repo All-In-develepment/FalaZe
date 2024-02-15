@@ -12,11 +12,21 @@ const UpdateSettingService = async ({
   value,
   companyId
 }: Request): Promise<Setting | undefined> => {
+  if (companyId === 1 && key === "asaas" && value) {
+    const settings = await Setting.findAll({ where: { key } });
+
+    await Promise.all(
+      settings.map(async setting => {
+        await setting.update({ value: value ?? "" });
+      })
+    );
+  }
+
   const [setting] = await Setting.findOrCreate({
     where: {
       key,
       companyId
-    }, 
+    },
     defaults: {
       key,
       value,

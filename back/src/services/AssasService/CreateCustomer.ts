@@ -3,10 +3,12 @@ import Company from "../../models/Company";
 import { listCustomer } from "./ListCustomer";
 import { verifySandbox } from "./VerifySandbox";
 
-export const createCustomer = async (access_token: string) => {
+export const createCustomer = async (
+  access_token: string,
+  sandbox: string,
+  companyId: string
+) => {
   try {
-    const sandbox = "true";
-
     const api = verifySandbox(sandbox);
 
     const {
@@ -15,7 +17,7 @@ export const createCustomer = async (access_token: string) => {
       email,
       cpfCnpj,
       postalCode
-    } = await Company.findByPk("1");
+    } = await Company.findByPk(companyId);
 
     const customer = await listCustomer({ access_token, cpfCnpj });
 

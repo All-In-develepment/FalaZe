@@ -37,6 +37,7 @@ export interface IListCustomer {
 export interface ICreatePayment extends ICreateCustomer {
   oldDate: string;
   value: number;
+  invoiceId: number;
 }
 
 export interface IListWebHookBilling {

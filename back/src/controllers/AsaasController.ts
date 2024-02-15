@@ -10,17 +10,11 @@ export const asaasPayments = async (
   res: Response
 ): Promise<Response> => {
   try {
-    const { invoiceId } = req.body;
+    const { invoiceId, companyId } = req.body;
 
-    console.log(req.body);
+    const create = await createPayment(invoiceId, companyId);
 
-    // console.log(invoiceId);
-
-    // const create = await createPayment(invoiceId);
-
-    // console.log(create);
-
-    // return res.status(200).json(create);
+    return res.status(200).json(create);
   } catch (error) {
     return error;
   }

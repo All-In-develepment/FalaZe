@@ -5,7 +5,6 @@ import { ISubAccount } from "../../@types";
 import Setting from "../../models/Setting";
 import Affiliates from "../../models/Affiliates";
 import dotenv from "dotenv";
-import Company from "../../models/Company";
 dotenv.config();
 
 export const createSubAccount = async ({
@@ -15,10 +14,11 @@ export const createSubAccount = async ({
   cpfCnpj,
   full_address,
   companyType,
-  companyId,
-  sandbox
+  companyId
 }: ISubAccount) => {
-  const api = verifySandbox(process.env.ASAAS_SANDBOX);
+  const sandbox = process.env.ASAAS_SANDBOX;
+
+  const api = verifySandbox(sandbox);
 
   const { value: access_token } = await Setting.findOne({
     where: { key: "asaas", companyId }
@@ -45,7 +45,7 @@ export const createSubAccount = async ({
     name,
     email,
     cpfCnpj: cpfCnpj.replace(/[.-/]/g, ""),
-    mobilePhone,
+    mobilePhone: mobilePhone.replace(/[-() ]/g, ""),
     companyType,
     address: fullAddress.address,
     addressNumber,
@@ -55,7 +55,7 @@ export const createSubAccount = async ({
 
   const { data: asaasData } = await axios.post(url, data, options);
 
-  const { id } = await Affiliates.create({
+  await Affiliates.create({
     asaasId: asaasData.id,
     name: asaasData.name,
     email: asaasData.email,
@@ -73,10 +73,6 @@ export const createSubAccount = async ({
     birthDate: asaasData.birthDate,
     data: JSON.stringify(asaasData)
   });
-
-  const company = await Company.findByPk(companyId);
-
-  await company.update({ affiliateId: id });
 
   return asaasData;
 };
