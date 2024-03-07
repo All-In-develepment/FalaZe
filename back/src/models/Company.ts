@@ -23,6 +23,7 @@ import User from "./User";
 import UserRating from "./UserRating";
 import Whatsapp from "./Whatsapp";
 import Affiliates from "./Affiliates";
+import Invoices from "./Invoices";
 
 @Table
 class Company extends Model<Company> {
@@ -142,6 +143,9 @@ class Company extends Model<Company> {
 
   @BelongsTo(() => Affiliates)
   affiliate: Affiliates;
+
+  @HasMany(() => Invoices)
+  invoices: Invoices[];
 }
 
 export default Company;
