@@ -1,0 +1,96 @@
+version: "3"
+
+services:
+  db-pg:
+    platform: linux/x86_64
+    image: postgres
+    restart: always
+    container_name: falatu-db-new
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - db_pg_network-ft
+  redis-stack:
+    image: redis/redis-stack:latest
+    container_name: falatu-redis-new
+    restart: always
+    environment:
+      REDIS_PASSWORD: "123456"
+    ports:
+      - "6380:6380"
+    volumes:
+      - redis:/var/lib/redis
+    networks:
+      - proxy_manager-ft
+  backend:
+    build:
+      dockerfile: test.Dockerfile
+    container_name: falatu-back-new
+    restart: always
+    environment:
+      DB_HOST: db-pg
+      REDIS_URI: redis://redis-stack:6380
+      TZ: America/Sao_Paulo
+    depends_on:
+      - db-pg
+      - redis-stack
+    ports:
+      - "${PORT}:8080"
+      - "9229:9229"
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - db_pg_network-ft
+      - proxy_manager-ft
+  frontend:
+    build:
+      context: ../frontend/.
+      dockerfile: ../frontend/Dockerfile
+    container_name: falatu-front-new
+    restart: always
+    depends_on:
+      - backend
+    # environment:
+    #   TZ: America/Sao_Paulo
+    ports:
+      - "3334:3000"
+    volumes:
+      - ../frontend/.:/usr/src/app
+    networks:
+      - proxy_manager-ft
+    stdin_open: true
+    tty: true
+  # nginx:
+  #   image: nginx:latest
+  #   restart: always
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   networks:
+  #     - proxy_manager-ft
+  #   depends_on:
+  #     - backend
+
+volumes:
+  pgdata:
+    name: pgdata-ft
+  backend:
+    name: backend-ft
+  redis:
+    name: redis-ft
+  # nginx:
+  #   name: nginx
+
+networks:
+  db_pg_network-ft:
+    name: db_pg_network-ft
+  proxy_manager-ft:
+    name: proxy_manager-ft

@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/static/css/main.bbfb430f.chunk.css",
+    "main.js": "/static/js/main.7c60595d.chunk.js",
+    "runtime-main.js": "/static/js/runtime-main.89218d8a.js",
+    "static/css/2.406c6332.chunk.css": "/static/css/2.406c6332.chunk.css",
+    "static/js/2.8fa72873.chunk.js": "/static/js/2.8fa72873.chunk.js",
+    "static/js/3.fe4190a5.chunk.js": "/static/js/3.fe4190a5.chunk.js",
+    "index.html": "/index.html",
+    "precache-manifest.dfdac08445f74fac4770810c9f5878dd.js": "/precache-manifest.dfdac08445f74fac4770810c9f5878dd.js",
+    "service-worker.js": "/service-worker.js",
+    "static/js/2.8fa72873.chunk.js.LICENSE.txt": "/static/js/2.8fa72873.chunk.js.LICENSE.txt",
+    "static/js/3.fe4190a5.chunk.js.LICENSE.txt": "/static/js/3.fe4190a5.chunk.js.LICENSE.txt",
+    "static/media/chat_notify.mp3": "/static/media/chat_notify.2529c259.mp3",
+    "static/media/logo.png": "/static/media/logo.67730401.png",
+    "static/media/n8n.png": "/static/media/n8n.5c788b8d.png",
+    "static/media/planilha.xlsx": "/static/media/planilha.549edeba.xlsx",
+    "static/media/sound.mp3": "/static/media/sound.9fd5812c.mp3",
+    "static/media/wa-background-dark.png": "/static/media/wa-background-dark.8244f042.png",
+    "static/media/wa-background.png": "/static/media/wa-background.2675a051.png",
+    "static/media/webhook.png": "/static/media/webhook.e5374d73.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.89218d8a.js",
+    "static/css/2.406c6332.chunk.css",
+    "static/js/2.8fa72873.chunk.js",
+    "static/css/main.bbfb430f.chunk.css",
+    "static/js/main.7c60595d.chunk.js"
+  ]
+}
