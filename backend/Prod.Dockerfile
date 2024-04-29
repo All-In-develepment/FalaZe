@@ -65,6 +65,10 @@ RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
     && chown -R pptruser:pptruser /home/pptruser \
     && chown -R pptruser:pptruser /app
 
+RUN apk add --no-cache tzdata
+
+ENV TZ=America/Sao_Paulo
+
 COPY ["package.json", "package-lock.json*", "./"]
 
 RUN chown -R node:node .
@@ -78,4 +82,4 @@ RUN npm run build
 COPY --chown=node:node . .
 RUN chown -R 1000:1000 /home/node/.npm
 USER node:node
-CMD [ "npm", "run", "dev:server" ]
+CMD [ "npm", "start" ]

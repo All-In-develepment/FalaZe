@@ -32,7 +32,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: Prod.Dockerfile
+      dockerfile: Dev.Dockerfile
     container_name: falatu-back-new
     restart: always
     environment:
@@ -44,6 +44,7 @@ services:
       - redis-stack
     ports:
       - "${PORT}:${PORT}"
+      - "9229:9229"
     volumes:
       - .:/usr/src/app
     networks:
@@ -67,18 +68,19 @@ services:
       - proxy_manager-ft
     stdin_open: true
     tty: true
-  # nginx:
-  #   image: nginx:latest
-  #   restart: always
-  #   volumes:
-  #     - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   networks:
-  #     - proxy_manager-ft
-  #   depends_on:
-  #     - backend
+  nginx:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - proxy_manager-ft
+    depends_on:
+      - backend
+      - frontend
 
 volumes:
   pgdataft:
@@ -87,8 +89,8 @@ volumes:
     name: backend-ft
   redisft:
     name: redis-ft
-  # nginx:
-  #   name: nginx
+  nginx:
+    name: nginx-ft
 
 networks:
   db_pg_network-ft:
