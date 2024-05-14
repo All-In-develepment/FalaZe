@@ -16,6 +16,7 @@
     "bootstrap": "^5.2.3",
     "context": "^4.0.0",
     "date-fns": "^2.16.1",
+    "dotenv": "^16.4.5",
     "emoji-mart": "^3.0.0",
     "formik": "^2.2.0",
     "formik-material-ui": "^3.0.1",
@@ -57,7 +58,7 @@
     "yup": "^0.32.8"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts --openssl-legacy-provider start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "builddev": "react-scripts build",
     "test": "react-scripts test",

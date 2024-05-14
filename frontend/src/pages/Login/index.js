@@ -14,7 +14,22 @@ import Container from "@material-ui/core/Container";
 import { i18n } from "../../translate/i18n";
 
 import { AuthContext } from "../../context/Auth/AuthContext";
-import logo from "../../assets/logo.png";
+import logoFalaZe from "../../assets/logo.png";
+import logoFalaTu from "../../assets/logoFalaTU.png";
+import { config } from "dotenv";
+
+config();
+
+let logo = null;
+if (process.env.REACT_APP_PROJECT_NAME === "FalaTU")
+{
+	logo = logoFalaTu; 
+} 
+else
+{
+	logo = logoFalaZe;
+}
+
 
 
 const Copyright = () => {
@@ -34,7 +49,7 @@ const useStyles = makeStyles(theme => ({
 	root: {
 		width: "100vw",
 		height: "100vh",
-		background: "linear-gradient(to right, #6D30EF , #6D30EF , #4C21A7)", //cor de fundo 
+		background: "linear-gradient(to right, #081C34 , #081C34 , #344380)", //cor de fundo 
 		//backgroundImage: "url(https://#)",
 		backgroundRepeat: "no-repeat",
 		backgroundSize: "100% 100%",
