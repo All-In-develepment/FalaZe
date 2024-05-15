@@ -24,9 +24,15 @@ export const receivedPaymentAsaas = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  const { payment } = req.body;
-  await paymentReceived(payment);
+  const { payment, event } = req.body;
 
+  console.log(event);
+
+  if (event === "PAYMENT_CONFIRMED") {
+    await paymentReceived(payment);
+
+    return res.status(200).json();
+  }
   return res.status(200).json();
 };
 

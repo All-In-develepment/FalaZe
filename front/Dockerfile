@@ -2,6 +2,8 @@ FROM node:latest
 
 WORKDIR /usr/src/app
 
+RUN chown node:node /usr/src/app
+
 COPY package*.json ./
 
 RUN npm update --save

@@ -86,6 +86,7 @@ export default function CheckoutPage(props) {
         users: plan.users,
         connections: plan.connections,
         invoiceId: invoiceId,
+        companyId: localStorage.getItem("companyId"),
       };
 
       // const { data } = await api.post("/subscription", newValues);
