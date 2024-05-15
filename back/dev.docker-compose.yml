@@ -41,6 +41,7 @@ services:
       - redis-stack
     ports:
       - "${PORT}:8080"
+      - "9229:9229"
     volumes:
       - .:/usr/src/app
     networks:
@@ -66,17 +67,11 @@ services:
     tty: true
   nginx:
     image: nginx:latest
-<<<<<<< HEAD
-    restart: always
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-=======
     container_name: nginx-proxy_manager
     restart: always
     volumes:
-      - ./data:/data
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       - ./letsencrypt:/etc/letsencrypt
->>>>>>> 16bba9b433f33b8f585bee876fa162ce19049ccc
     ports:
       - "80:80"
       - "443:443"
