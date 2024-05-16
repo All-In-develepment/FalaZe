@@ -36,7 +36,7 @@ RUN apk add --no-cache python3 make g++ && \
     mkdir $HOME/.cache && \
     chown -R node:node $HOME
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # ARE ALL THOSE PACKAGES NEEDED FOR THE FINAL IMAGE?
 # Installs latest Chromium (92) package (for use in puppeteer/ppt generation).
@@ -53,11 +53,6 @@ RUN apk add --no-cache \
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
-# Add git
-RUN apk --no-cache add git
-# Add latest version from node
-#RUN npm install -g npm@latest
-
 # DO WE NEED THOSE LINES?
 # Add user so we don't need --no-sandbox.
 RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
@@ -65,21 +60,20 @@ RUN addgroup -S pptruser && adduser -S -G pptruser pptruser \
     && chown -R pptruser:pptruser /home/pptruser \
     && chown -R pptruser:pptruser /app
 
+# Instalar tzdata
 RUN apk add --no-cache tzdata
 
+# Definir o fuso horário desejado
 ENV TZ=America/Sao_Paulo
 
 COPY ["package.json", "package-lock.json*", "./"]
-
 RUN chown -R node:node .
-
 RUN npm install
 
-COPY . .
+COPY --chown=node:node . .
 
 RUN npm run build
 
-COPY --chown=node:node . .
 RUN chown -R 1000:1000 /home/node/.npm
 USER node:node
 CMD [ "npm", "run", "dev:debug" ]
