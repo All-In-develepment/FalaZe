@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useReducer, useCallback, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useReducer,
+  useCallback,
+  useContext
+} from "react";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
@@ -38,7 +44,7 @@ const eventTitleStyle = {
   fontSize: "14px", // Defina um tamanho de fonte menor
   overflow: "hidden", // Oculte qualquer conteúdo excedente
   whiteSpace: "nowrap", // Evite a quebra de linha do texto
-  textOverflow: "ellipsis", // Exiba "..." se o texto for muito longo
+  textOverflow: "ellipsis" // Exiba "..." se o texto for muito longo
 };
 
 const localizer = momentLocalizer(moment);
@@ -70,7 +76,7 @@ const reducer = (state, action) => {
 
   if (action.type === "UPDATE_SCHEDULES") {
     const schedule = action.payload;
-    const scheduleIndex = state.findIndex((s) => s.id === schedule.id);
+    const scheduleIndex = state.findIndex(s => s.id === schedule.id);
 
     if (scheduleIndex !== -1) {
       state[scheduleIndex] = schedule;
@@ -82,7 +88,7 @@ const reducer = (state, action) => {
 
   if (action.type === "DELETE_SCHEDULE") {
     const scheduleId = action.payload;
-    return state.filter((s) => s.id !== scheduleId);
+    return state.filter(s => s.id !== scheduleId);
   }
 
   if (action.type === "RESET") {
@@ -92,13 +98,13 @@ const reducer = (state, action) => {
   return state;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainPaper: {
     flex: 1,
     padding: theme.spacing(1),
     overflowY: "scroll",
-    ...theme.scrollbarStyles,
-  },
+    ...theme.scrollbarStyles
+  }
 }));
 
 const Schedules = () => {
@@ -118,11 +124,29 @@ const Schedules = () => {
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
   const [contactId, setContactId] = useState(+getUrlParam("contactId"));
 
+  const { getPlanCompany } = usePlans();
+  const companyId = user.companyId;
+
+  useEffect(() => {
+    async function fetchData() {
+      const planConfigs = await getPlanCompany(undefined, companyId);
+      if (!planConfigs.plan.useSchedules) {
+        toast.error(
+          "Esta empresa não possui permissão para acessar essa página! Estamos lhe redirecionando."
+        );
+        setTimeout(() => {
+          history.push(`/`);
+        }, 1000);
+      }
+    }
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchSchedules = useCallback(async () => {
     try {
       const { data } = await api.get("/schedules/", {
-        params: { searchParam, pageNumber },
+        params: { searchParam, pageNumber }
       });
 
       dispatch({ type: "LOAD_SCHEDULES", payload: data.schedules });
@@ -155,14 +179,14 @@ const Schedules = () => {
     pageNumber,
     contactId,
     fetchSchedules,
-    handleOpenScheduleModalFromContactId,
+    handleOpenScheduleModalFromContactId
   ]);
 
   useEffect(() => {
     handleOpenScheduleModalFromContactId();
     const socket = socketConnection({ companyId: user.companyId });
 
-    socket.on(`company${user.companyId}-schedule`, (data) => {
+    socket.on(`company${user.companyId}-schedule`, data => {
       if (data.action === "update" || data.action === "create") {
         dispatch({ type: "UPDATE_SCHEDULES", payload: data.schedule });
       }
@@ -191,16 +215,16 @@ const Schedules = () => {
     setScheduleModalOpen(false);
   };
 
-  const handleSearch = (event) => {
+  const handleSearch = event => {
     setSearchParam(event.target.value.toLowerCase());
   };
 
-  const handleEditSchedule = (schedule) => {
+  const handleEditSchedule = schedule => {
     setSelectedSchedule(schedule);
     setScheduleModalOpen(true);
   };
 
-  const handleDeleteSchedule = async (scheduleId) => {
+  const handleDeleteSchedule = async scheduleId => {
     try {
       await api.delete(`/schedules/${scheduleId}`);
       toast.success(i18n.t("schedules.toasts.deleted"));
@@ -217,10 +241,10 @@ const Schedules = () => {
   };
 
   const loadMore = () => {
-    setPageNumber((prevState) => prevState + 1);
+    setPageNumber(prevState => prevState + 1);
   };
 
-  const handleScroll = (e) => {
+  const handleScroll = e => {
     if (!hasMore || loading) return;
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
     if (scrollHeight - (scrollTop + 100) < clientHeight) {
@@ -258,7 +282,9 @@ const Schedules = () => {
         cleanContact={cleanContact}
       />
       <MainHeader>
-        <Title>{i18n.t("schedules.title")} ({schedules.length})</Title>
+        <Title>
+          {i18n.t("schedules.title")} ({schedules.length})
+        </Title>
         <MainHeaderButtonsWrapper>
           <TextField
             placeholder={i18n.t("contacts.searchPlaceholder")}
@@ -270,7 +296,7 @@ const Schedules = () => {
                 <InputAdornment position="start">
                   <SearchIcon style={{ color: "gray" }} />
                 </InputAdornment>
-              ),
+              )
             }}
           />
           <Button
@@ -282,15 +308,19 @@ const Schedules = () => {
           </Button>
         </MainHeaderButtonsWrapper>
       </MainHeader>
-      <Paper className={classes.mainPaper} variant="outlined" onScroll={handleScroll}>
+      <Paper
+        className={classes.mainPaper}
+        variant="outlined"
+        onScroll={handleScroll}
+      >
         <Calendar
           messages={defaultMessages}
           formats={{
-          agendaDateFormat: "DD/MM ddd",
-          weekdayFormat: "dddd"
-      }}
+            agendaDateFormat: "DD/MM ddd",
+            weekdayFormat: "dddd"
+          }}
           localizer={localizer}
-          events={schedules.map((schedule) => ({
+          events={schedules.map(schedule => ({
             title: (
               <div className="event-container">
                 <div style={eventTitleStyle}>{schedule.contact.name}</div>
@@ -308,7 +338,7 @@ const Schedules = () => {
               </div>
             ),
             start: new Date(schedule.sendAt),
-            end: new Date(schedule.sendAt),
+            end: new Date(schedule.sendAt)
           }))}
           startAccessor="start"
           endAccessor="end"

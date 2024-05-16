@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 import { toast } from "react-toastify";
 
 import { useHistory } from "react-router-dom";
@@ -40,14 +40,17 @@ import { isArray } from "lodash";
 import { useDate } from "../../hooks/useDate";
 import { socketConnection } from "../../services/socket";
 
+import usePlans from "../../hooks/usePlans";
+import { AuthContext } from "../../context/Auth/AuthContext";
+
 const reducer = (state, action) => {
   if (action.type === "LOAD_CAMPAIGNS") {
     const campaigns = action.payload;
     const newCampaigns = [];
 
     if (isArray(campaigns)) {
-      campaigns.forEach((campaign) => {
-        const campaignIndex = state.findIndex((u) => u.id === campaign.id);
+      campaigns.forEach(campaign => {
+        const campaignIndex = state.findIndex(u => u.id === campaign.id);
         if (campaignIndex !== -1) {
           state[campaignIndex] = campaign;
         } else {
@@ -61,7 +64,7 @@ const reducer = (state, action) => {
 
   if (action.type === "UPDATE_CAMPAIGNS") {
     const campaign = action.payload;
-    const campaignIndex = state.findIndex((u) => u.id === campaign.id);
+    const campaignIndex = state.findIndex(u => u.id === campaign.id);
 
     if (campaignIndex !== -1) {
       state[campaignIndex] = campaign;
@@ -74,7 +77,7 @@ const reducer = (state, action) => {
   if (action.type === "DELETE_CAMPAIGN") {
     const campaignId = action.payload;
 
-    const campaignIndex = state.findIndex((u) => u.id === campaignId);
+    const campaignIndex = state.findIndex(u => u.id === campaignId);
     if (campaignIndex !== -1) {
       state.splice(campaignIndex, 1);
     }
@@ -86,13 +89,13 @@ const reducer = (state, action) => {
   }
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainPaper: {
     flex: 1,
     padding: theme.spacing(1),
     overflowY: "scroll",
-    ...theme.scrollbarStyles,
-  },
+    ...theme.scrollbarStyles
+  }
 }));
 
 const Campaigns = () => {
@@ -112,6 +115,26 @@ const Campaigns = () => {
 
   const { datetimeToClient } = useDate();
 
+  const { user } = useContext(AuthContext);
+  const { getPlanCompany } = usePlans();
+  const companyId = user.companyId;
+
+  useEffect(() => {
+    async function fetchData() {
+      const planConfigs = await getPlanCompany(undefined, companyId);
+      if (!planConfigs.plan.useCampaigns) {
+        toast.error(
+          "Esta empresa não possui permissão para acessar essa página! Estamos lhe redirecionando."
+        );
+        setTimeout(() => {
+          history.push(`/`);
+        }, 1000);
+      }
+    }
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     dispatch({ type: "RESET" });
     setPageNumber(1);
@@ -130,7 +153,7 @@ const Campaigns = () => {
     const companyId = localStorage.getItem("companyId");
     const socket = socketConnection({ companyId });
 
-    socket.on(`company-${companyId}-campaign`, (data) => {
+    socket.on(`company-${companyId}-campaign`, data => {
       if (data.action === "update" || data.action === "create") {
         dispatch({ type: "UPDATE_CAMPAIGNS", payload: data.record });
       }
@@ -146,7 +169,7 @@ const Campaigns = () => {
   const fetchCampaigns = async () => {
     try {
       const { data } = await api.get("/campaigns/", {
-        params: { searchParam, pageNumber },
+        params: { searchParam, pageNumber }
       });
       dispatch({ type: "LOAD_CAMPAIGNS", payload: data.records });
       setHasMore(data.hasMore);
@@ -166,16 +189,16 @@ const Campaigns = () => {
     setCampaignModalOpen(false);
   };
 
-  const handleSearch = (event) => {
+  const handleSearch = event => {
     setSearchParam(event.target.value.toLowerCase());
   };
 
-  const handleEditCampaign = (campaign) => {
+  const handleEditCampaign = campaign => {
     setSelectedCampaign(campaign);
     setCampaignModalOpen(true);
   };
 
-  const handleDeleteCampaign = async (campaignId) => {
+  const handleDeleteCampaign = async campaignId => {
     try {
       await api.delete(`/campaigns/${campaignId}`);
       toast.success(i18n.t("campaigns.toasts.deleted"));
@@ -188,10 +211,10 @@ const Campaigns = () => {
   };
 
   const loadMore = () => {
-    setPageNumber((prevState) => prevState + 1);
+    setPageNumber(prevState => prevState + 1);
   };
 
-  const handleScroll = (e) => {
+  const handleScroll = e => {
     if (!hasMore || loading) return;
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
     if (scrollHeight - (scrollTop + 100) < clientHeight) {
@@ -199,7 +222,7 @@ const Campaigns = () => {
     }
   };
 
-  const formatStatus = (val) => {
+  const formatStatus = val => {
     switch (val) {
       case "INATIVA":
         return "Inativa";
@@ -216,7 +239,7 @@ const Campaigns = () => {
     }
   };
 
-  const cancelCampaign = async (campaign) => {
+  const cancelCampaign = async campaign => {
     try {
       await api.post(`/campaigns/${campaign.id}/cancel`);
       toast.success(i18n.t("campaigns.toasts.cancel"));
@@ -227,7 +250,7 @@ const Campaigns = () => {
     }
   };
 
-  const restartCampaign = async (campaign) => {
+  const restartCampaign = async campaign => {
     try {
       await api.post(`/campaigns/${campaign.id}/restart`);
       toast.success(i18n.t("campaigns.toasts.restart"));
@@ -282,7 +305,7 @@ const Campaigns = () => {
                       <InputAdornment position="start">
                         <SearchIcon style={{ color: "gray" }} />
                       </InputAdornment>
-                    ),
+                    )
                   }}
                 />
               </Grid>
@@ -336,7 +359,7 @@ const Campaigns = () => {
           </TableHead>
           <TableBody>
             <>
-              {campaigns.map((campaign) => (
+              {campaigns.map(campaign => (
                 <TableRow key={campaign.id}>
                   <TableCell align="center">{campaign.name}</TableCell>
                   <TableCell align="center">
@@ -401,7 +424,7 @@ const Campaigns = () => {
 
                     <IconButton
                       size="small"
-                      onClick={(e) => {
+                      onClick={e => {
                         setConfirmModalOpen(true);
                         setDeletingCampaign(campaign);
                       }}

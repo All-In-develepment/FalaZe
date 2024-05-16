@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -23,20 +23,24 @@ import ListAltIcon from "@material-ui/icons/ListAlt";
 import { useDate } from "../../hooks/useDate";
 
 import { socketConnection } from "../../services/socket";
+import { AuthContext } from "../../context/Auth/AuthContext";
+import usePlans from "../../hooks/usePlans";
+import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainPaper: {
     flex: 1,
     padding: theme.spacing(2),
     overflowY: "scroll",
-    ...theme.scrollbarStyles,
+    ...theme.scrollbarStyles
   },
   textRight: {
-    textAlign: "right",
+    textAlign: "right"
   },
   tabPanelsContainer: {
-    padding: theme.spacing(2),
-  },
+    padding: theme.spacing(2)
+  }
 }));
 
 const CampaignReport = () => {
@@ -55,6 +59,28 @@ const CampaignReport = () => {
 
   const { datetimeToClient } = useDate();
 
+  const history = useHistory();
+
+  const { user } = useContext(AuthContext);
+  const { getPlanCompany } = usePlans();
+  const companyId = user.companyId;
+
+  useEffect(() => {
+    async function fetchData() {
+      const planConfigs = await getPlanCompany(undefined, companyId);
+      if (!planConfigs.plan.useCampaigns) {
+        toast.error(
+          "Esta empresa não possui permissão para acessar essa página! Estamos lhe redirecionando."
+        );
+        setTimeout(() => {
+          history.push(`/`);
+        }, 1000);
+      }
+    }
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (mounted.current) {
       findCampaign();
@@ -70,18 +96,18 @@ const CampaignReport = () => {
     if (mounted.current && has(campaign, "shipping")) {
       if (has(campaign, "contactList")) {
         const contactList = get(campaign, "contactList");
-        const valids = contactList.contacts.filter((c) => c.isWhatsappValid);
+        const valids = contactList.contacts.filter(c => c.isWhatsappValid);
         setValidContacts(valids.length);
       }
 
       if (has(campaign, "shipping")) {
         const contacts = get(campaign, "shipping");
-        const delivered = contacts.filter((c) => !isNull(c.deliveredAt));
+        const delivered = contacts.filter(c => !isNull(c.deliveredAt));
         const confirmationRequested = contacts.filter(
-          (c) => !isNull(c.confirmationRequestedAt)
+          c => !isNull(c.confirmationRequestedAt)
         );
         const confirmed = contacts.filter(
-          (c) => !isNull(c.deliveredAt) && !isNull(c.confirmationRequestedAt)
+          c => !isNull(c.deliveredAt) && !isNull(c.confirmationRequestedAt)
         );
         setDelivered(delivered.length);
         setConfirmationRequested(confirmationRequested.length);
@@ -99,8 +125,7 @@ const CampaignReport = () => {
     const companyId = localStorage.getItem("companyId");
     const socket = socketConnection({ companyId });
 
-    socket.on(`company-${companyId}-campaign`, (data) => {
-     
+    socket.on(`company-${companyId}-campaign`, data => {
       if (data.record.id === +campaignId) {
         setCampaign(data.record);
 
@@ -125,7 +150,7 @@ const CampaignReport = () => {
     setLoading(false);
   };
 
-  const formatStatus = (val) => {
+  const formatStatus = val => {
     switch (val) {
       case "INATIVA":
         return "Inativa";

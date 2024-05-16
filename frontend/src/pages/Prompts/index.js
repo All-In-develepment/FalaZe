@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 
 import openSocket from "socket.io-client";
 
@@ -27,19 +27,22 @@ import { DeleteOutline, Edit } from "@material-ui/icons";
 import PromptModal from "../../components/PromptModal";
 import { toast } from "react-toastify";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import { AuthContext } from "../../context/Auth/AuthContext";
+import usePlans from "../../hooks/usePlans";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainPaper: {
     flex: 1,
     padding: theme.spacing(1),
     overflowY: "scroll",
-    ...theme.scrollbarStyles,
+    ...theme.scrollbarStyles
   },
   customTableCell: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
-  },
+    justifyContent: "center"
+  }
 }));
 
 const reducer = (state, action) => {
@@ -47,8 +50,8 @@ const reducer = (state, action) => {
     const prompts = action.payload;
     const newPrompts = [];
 
-    prompts.forEach((prompt) => {
-      const promptIndex = state.findIndex((p) => p.id === prompt.id);
+    prompts.forEach(prompt => {
+      const promptIndex = state.findIndex(p => p.id === prompt.id);
       if (promptIndex !== -1) {
         state[promptIndex] = prompt;
       } else {
@@ -61,7 +64,7 @@ const reducer = (state, action) => {
 
   if (action.type === "UPDATE_PROMPTS") {
     const prompt = action.payload;
-    const promptIndex = state.findIndex((p) => p.id === prompt.id);
+    const promptIndex = state.findIndex(p => p.id === prompt.id);
 
     if (promptIndex !== -1) {
       state[promptIndex] = prompt;
@@ -73,7 +76,7 @@ const reducer = (state, action) => {
 
   if (action.type === "DELETE_PROMPT") {
     const promptId = action.payload;
-    const promptIndex = state.findIndex((p) => p.id === promptId);
+    const promptIndex = state.findIndex(p => p.id === promptId);
     if (promptIndex !== -1) {
       state.splice(promptIndex, 1);
     }
@@ -88,12 +91,34 @@ const reducer = (state, action) => {
 const Prompts = () => {
   const classes = useStyles();
 
+  const history = useHistory();
+
   const [prompts, dispatch] = useReducer(reducer, []);
   const [loading, setLoading] = useState(false);
 
   const [promptModalOpen, setPromptModalOpen] = useState(false);
   const [selectedPrompt, setSelectedPrompt] = useState(null);
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const { user } = useContext(AuthContext);
+  const { getPlanCompany } = usePlans();
+  const companyId = user.companyId;
+
+  useEffect(() => {
+    async function fetchData() {
+      const planConfigs = await getPlanCompany(undefined, companyId);
+      if (!planConfigs.plan.useOpenAi) {
+        toast.error(
+          "Esta empresa não possui permissão para acessar essa página! Estamos lhe redirecionando."
+        );
+        setTimeout(() => {
+          history.push(`/`);
+        }, 1000);
+      }
+    }
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -113,7 +138,7 @@ const Prompts = () => {
   useEffect(() => {
     const socket = openSocket(process.env.REACT_APP_BACKEND_URL);
 
-    socket.on("prompt", (data) => {
+    socket.on("prompt", data => {
       if (data.action === "update" || data.action === "create") {
         dispatch({ type: "UPDATE_PROMPTS", payload: data.prompt });
       }
@@ -138,7 +163,7 @@ const Prompts = () => {
     setSelectedPrompt(null);
   };
 
-  const handleEditPrompt = (prompt) => {
+  const handleEditPrompt = prompt => {
     setSelectedPrompt(prompt);
     setPromptModalOpen(true);
   };
@@ -148,7 +173,7 @@ const Prompts = () => {
     setSelectedPrompt(null);
   };
 
-  const handleDeletePrompt = async (promptId) => {
+  const handleDeletePrompt = async promptId => {
     try {
       const { data } = await api.delete(`/prompt/${promptId}`);
       toast.info(i18n.t(data.message));
@@ -163,7 +188,8 @@ const Prompts = () => {
       <ConfirmationModal
         title={
           selectedPrompt &&
-          `${i18n.t("prompts.confirmationModal.deleteTitle")} ${selectedPrompt.name
+          `${i18n.t("prompts.confirmationModal.deleteTitle")} ${
+            selectedPrompt.name
           }?`
         }
         open={confirmModalOpen}
@@ -193,15 +219,13 @@ const Prompts = () => {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell align="left">
-                {i18n.t("prompts.table.name")}
-              </TableCell>
+              <TableCell align="left">{i18n.t("prompts.table.name")}</TableCell>
               <TableCell align="left">
                 {i18n.t("prompts.table.queue")}
               </TableCell>
               <TableCell align="left">
                 {i18n.t("prompts.table.max_tokens")}
-              </TableCell> 
+              </TableCell>
               <TableCell align="center">
                 {i18n.t("prompts.table.actions")}
               </TableCell>
@@ -209,7 +233,7 @@ const Prompts = () => {
           </TableHead>
           <TableBody>
             <>
-              {prompts.map((prompt) => (
+              {prompts.map(prompt => (
                 <TableRow key={prompt.id}>
                   <TableCell align="left">{prompt.name}</TableCell>
                   <TableCell align="left">{prompt.queue.name}</TableCell>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -26,30 +26,33 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { AuthContext } from "../../context/Auth/AuthContext";
+import usePlans from "../../hooks/usePlans";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   mainPaper: {
     flex: 1,
     padding: theme.spacing(1),
     overflowY: "scroll",
-    ...theme.scrollbarStyles,
+    ...theme.scrollbarStyles
   },
   textRight: {
-    textAlign: "right",
+    textAlign: "right"
   },
   tabPanelsContainer: {
-    padding: theme.spacing(2),
-  },
+    padding: theme.spacing(2)
+  }
 }));
 
 const initialSettings = {
   messageInterval: 20,
   longerIntervalAfter: 20,
   greaterInterval: 60,
-  variables: [],
+  variables: []
 };
 
 const CampaignsConfig = () => {
@@ -61,11 +64,33 @@ const CampaignsConfig = () => {
   const [selectedKey, setSelectedKey] = useState(null);
   const [variable, setVariable] = useState({ key: "", value: "" });
 
+  const history = useHistory();
+
+  const { user } = useContext(AuthContext);
+  const { getPlanCompany } = usePlans();
+  const companyId = user.companyId;
+
+  useEffect(() => {
+    async function fetchData() {
+      const planConfigs = await getPlanCompany(undefined, companyId);
+      if (!planConfigs.plan.useCampaigns) {
+        toast.error(
+          "Esta empresa não possui permissão para acessar essa página! Estamos lhe redirecionando."
+        );
+        setTimeout(() => {
+          history.push(`/`);
+        }, 1000);
+      }
+    }
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     api.get("/campaign-settings").then(({ data }) => {
       const settingsList = [];
       if (Array.isArray(data) && data.length > 0) {
-        data.forEach((item) => {
+        data.forEach(item => {
           settingsList.push([item.key, JSON.parse(item.value)]);
         });
         setSettings(Object.fromEntries(settingsList));
@@ -73,24 +98,24 @@ const CampaignsConfig = () => {
     });
   }, []);
 
-  const handleOnChangeVariable = (e) => {
+  const handleOnChangeVariable = e => {
     if (e.target.value !== null) {
       const changedProp = {};
       changedProp[e.target.name] = e.target.value;
-      setVariable((prev) => ({ ...prev, ...changedProp }));
+      setVariable(prev => ({ ...prev, ...changedProp }));
     }
   };
 
-  const handleOnChangeSettings = (e) => {
+  const handleOnChangeSettings = e => {
     const changedProp = {};
     changedProp[e.target.name] = e.target.value;
-    setSettings((prev) => ({ ...prev, ...changedProp }));
+    setSettings(prev => ({ ...prev, ...changedProp }));
   };
 
   const addVariable = () => {
-    setSettings((prev) => {
+    setSettings(prev => {
       const variablesExists = settings.variables.filter(
-        (v) => v.key === variable.key
+        v => v.key === variable.key
       );
       const variables = prev.variables;
       if (variablesExists.length === 0) {
@@ -102,8 +127,8 @@ const CampaignsConfig = () => {
   };
 
   const removeVariable = () => {
-    const newList = settings.variables.filter((v) => v.key !== selectedKey);
-    setSettings((prev) => ({ ...prev, variables: newList }));
+    const newList = settings.variables.filter(v => v.key !== selectedKey);
+    setSettings(prev => ({ ...prev, variables: newList }));
     setSelectedKey(null);
   };
 
@@ -150,7 +175,7 @@ const CampaignsConfig = () => {
                   labelId="messageInterval-label"
                   label="Intervalo Randômico de Disparo"
                   value={settings.messageInterval}
-                  onChange={(e) => handleOnChangeSettings(e)}
+                  onChange={e => handleOnChangeSettings(e)}
                 >
                   <MenuItem value={0}>Sem Intervalo</MenuItem>
                   <MenuItem value={5}>5 segundos</MenuItem>
@@ -175,7 +200,7 @@ const CampaignsConfig = () => {
                   labelId="longerIntervalAfter-label"
                   label="Intervalo Maior Após"
                   value={settings.longerIntervalAfter}
-                  onChange={(e) => handleOnChangeSettings(e)}
+                  onChange={e => handleOnChangeSettings(e)}
                 >
                   <MenuItem value={0}>Não definido</MenuItem>
                   <MenuItem value={1}>1 segundo</MenuItem>
@@ -207,7 +232,7 @@ const CampaignsConfig = () => {
                   labelId="greaterInterval-label"
                   label="Intervalo de Disparo Maior"
                   value={settings.greaterInterval}
-                  onChange={(e) => handleOnChangeSettings(e)}
+                  onChange={e => handleOnChangeSettings(e)}
                 >
                   <MenuItem value={0}>Sem Intervalo</MenuItem>
                   <MenuItem value={1}>1 segundo</MenuItem>
