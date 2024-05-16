@@ -69,7 +69,7 @@ services:
       - proxy_manager-ft
     stdin_open: true
     tty: true
-nginx:
+  nginx:
     image: nginx:alpine
     container_name: nginx
     ports:
