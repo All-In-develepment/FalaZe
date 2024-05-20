@@ -70,6 +70,11 @@ COPY ["package.json", "package-lock.json*", "./"]
 RUN chown -R node:node .
 RUN npm install
 
+# Cria a pasta public
+RUN mkdir public
+# adiciona permissao ao node para que os downloads sejam salvos
+RUN chown -R node:node ./public
+
 COPY --chown=node:node . .
 
 RUN npm run build

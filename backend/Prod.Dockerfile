@@ -16,6 +16,7 @@ RUN apk add --update --no-cache \
 RUN chown node:node /app
 RUN npm install jpegtran-bin
 
+ARG PORT
 ARG BUILD_DATE
 ARG VERSION
 ARG VCS_REF
@@ -70,9 +71,16 @@ COPY ["package.json", "package-lock.json*", "./"]
 RUN chown -R node:node .
 RUN npm install
 
+# Cria a pasta public
+RUN mkdir public
+# adiciona permissao ao node para que os downloads sejam salvos
+RUN chown -R node:node ./public
+
 COPY --chown=node:node . .
 
 RUN npm run build
+
+EXPOSE $PORT
 
 RUN chown -R 1000:1000 /home/node/.npm
 USER node:node
