@@ -285,7 +285,8 @@ const messages = {
           okAdd: "Adicionar",
           okEdit: "Salvar",
           cancel: "Cancelar"
-        }
+        },
+        save: "Fila salva com sucessor"
       },
       userModal: {
         title: {

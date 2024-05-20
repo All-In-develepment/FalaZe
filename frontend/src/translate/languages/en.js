@@ -167,7 +167,8 @@ const messages = {
           okAdd: "Add",
           okEdit: "Save",
           cancel: "Cancel"
-        }
+        },
+        save: "Queue saved successfully"
       },
       userModal: {
         title: {
