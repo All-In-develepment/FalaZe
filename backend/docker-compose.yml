@@ -63,8 +63,8 @@ services:
       - backend
     environment:
       TZ: America/Sao_Paulo
-    ports:
-      - "3334:80"
+    # ports:
+    #   - "3334:80"
     volumes:
       - ../frontend:/app
       - /app/node_modules
