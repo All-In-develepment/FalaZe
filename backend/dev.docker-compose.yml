@@ -48,9 +48,10 @@ services:
       - "${PORT}:${PORT}"
       - "9229:9229"
     volumes:
-      - .:/backend
+      - .:/app
       - /app/node_modules
       - /app/public
+      # - /app/certs
     networks:
       - db_pg_network-ft
       - proxy_manager-ft

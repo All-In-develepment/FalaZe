@@ -49,10 +49,10 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/public
     networks:
       - db_pg_network-ft
       - proxy_manager
-      - /app/public
   frontend:
     build:
       context: ../frontend/.
