@@ -13,7 +13,7 @@ import {
   IconButton,
   Menu,
   useTheme,
-  useMediaQuery,
+  useMediaQuery
 } from "@material-ui/core";
 
 import MenuIcon from "@material-ui/icons/Menu";
@@ -32,42 +32,54 @@ import { i18n } from "../translate/i18n";
 import toastError from "../errors/toastError";
 import AnnouncementsPopover from "../components/AnnouncementsPopover";
 
-import logo from "../assets/logo.png";
+// import logo from "../assets/logo.png";
 import { socketConnection } from "../services/socket";
 import ChatPopover from "../pages/Chat/ChatPopover";
 
 import { useDate } from "../hooks/useDate";
 
 import ColorModeContext from "../layout/themeContext";
-import Brightness4Icon from '@material-ui/icons/Brightness4';
-import Brightness7Icon from '@material-ui/icons/Brightness7';
+import Brightness4Icon from "@material-ui/icons/Brightness4";
+import Brightness7Icon from "@material-ui/icons/Brightness7";
+import logoFalaZe from "../assets/logo.png";
+import logoFalaTu from "../assets/logoFalaTU.png";
+import { config } from "dotenv";
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+config();
+
+let logo = null;
+if (process.env.REACT_APP_PROJECT_NAME === "FalaTU") {
+  logo = logoFalaTu;
+} else {
+  logo = logoFalaZe;
+}
+
+const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     height: "100vh",
     [theme.breakpoints.down("sm")]: {
-      height: "calc(100vh - 56px)",
+      height: "calc(100vh - 56px)"
     },
     backgroundColor: theme.palette.fancyBackground,
-    '& .MuiButton-outlinedPrimary': {
-      color: theme.mode === 'light' ? '#FFF' : '#FFF',
-	  backgroundColor: theme.mode === 'light' ? '#6D30EF' : '#1c1c1c',
+    "& .MuiButton-outlinedPrimary": {
+      color: theme.mode === "light" ? "#FFF" : "#FFF",
+      backgroundColor: theme.mode === "light" ? "#6D30EF" : "#1c1c1c"
       //border: theme.mode === 'light' ? '1px solid rgba(0 124 102)' : '1px solid rgba(255, 255, 255, 0.5)',
     },
-    '& .MuiTab-textColorPrimary.Mui-selected': {
-      color: theme.mode === 'light' ? '#6D30EF' : '#FFF',
+    "& .MuiTab-textColorPrimary.Mui-selected": {
+      color: theme.mode === "light" ? "#6D30EF" : "#FFF"
     }
   },
   avatar: {
-    width: "100%",
+    width: "100%"
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
     color: theme.palette.dark.main,
-    background: theme.palette.barraSuperior,
+    background: theme.palette.barraSuperior
   },
   toolbarIcon: {
     display: "flex",
@@ -83,30 +95,30 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
+      duration: theme.transitions.duration.leavingScreen
+    })
   },
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.enteringScreen
     }),
     [theme.breakpoints.down("sm")]: {
       display: "none"
     }
   },
   menuButton: {
-    marginRight: 36,
+    marginRight: 36
   },
   menuButtonHidden: {
-    display: "none",
+    display: "none"
   },
   title: {
     flexGrow: 1,
     fontSize: 14,
-    color: "white",
+    color: "white"
   },
   drawerPaper: {
     position: "relative",
@@ -114,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
+      duration: theme.transitions.duration.enteringScreen
     }),
     [theme.breakpoints.down("sm")]: {
       width: "100%"
@@ -125,27 +137,26 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "hidden",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
+      duration: theme.transitions.duration.leavingScreen
     }),
     width: theme.spacing(7),
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9),
+      width: theme.spacing(9)
     },
     [theme.breakpoints.down("sm")]: {
       width: "100%"
     }
   },
   appBarSpacer: {
-    minHeight: "48px",
+    minHeight: "48px"
   },
   content: {
     flex: 1,
-    overflow: "auto",
-
+    overflow: "auto"
   },
   container: {
     paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+    paddingBottom: theme.spacing(4)
   },
   paper: {
     padding: theme.spacing(2),
@@ -157,7 +168,7 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     padding: theme.spacing(1),
     overflowY: "scroll",
-    ...theme.scrollbarStyles,
+    ...theme.scrollbarStyles
   },
   NotificationsPopOver: {
     // color: theme.barraSuperior.secondary.main,
@@ -169,10 +180,10 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       width: "auto",
       height: "80%",
-      maxWidth: 180,
+      maxWidth: 180
     },
     logo: theme.logo
-  },
+  }
 }));
 
 const LoggedInLayout = ({ children, themeToggle }) => {
@@ -193,7 +204,6 @@ const LoggedInLayout = ({ children, themeToggle }) => {
   const [volume, setVolume] = useState(localStorage.getItem("volume") || 1);
 
   const { dateToClient } = useDate();
-
 
   //################### CODIGOS DE TESTE #########################################
   // useEffect(() => {
@@ -262,7 +272,7 @@ const LoggedInLayout = ({ children, themeToggle }) => {
 
     const socket = socketConnection({ companyId });
 
-    socket.on(`company-${companyId}-auth`, (data) => {
+    socket.on(`company-${companyId}-auth`, data => {
       if (data.user.id === +userId) {
         toastError("Sua conta foi acessada em outro computador.");
         setTimeout(() => {
@@ -284,7 +294,7 @@ const LoggedInLayout = ({ children, themeToggle }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleMenu = (event) => {
+  const handleMenu = event => {
     setAnchorEl(event.currentTarget);
     setMenuOpen(true);
   };
@@ -312,7 +322,7 @@ const LoggedInLayout = ({ children, themeToggle }) => {
 
   const handleRefreshPage = () => {
     window.location.reload(false);
-  }
+  };
 
   const handleMenuItemClick = () => {
     const { innerWidth: width } = window;
@@ -323,7 +333,7 @@ const LoggedInLayout = ({ children, themeToggle }) => {
 
   const toggleColorMode = () => {
     colorMode.toggleColorMode();
-  }
+  };
 
   if (loading) {
     return <BackdropLoading />;
@@ -338,7 +348,7 @@ const LoggedInLayout = ({ children, themeToggle }) => {
           paper: clsx(
             classes.drawerPaper,
             !drawerOpen && classes.drawerPaperClose
-          ),
+          )
         }}
         open={drawerOpen}
       >
@@ -386,25 +396,30 @@ const LoggedInLayout = ({ children, themeToggle }) => {
             className={classes.title}
           >
             {/* {greaterThenSm && user?.profile === "admin" && getDateAndDifDays(user?.company?.dueDate).difData < 7 ? ( */}
-            {greaterThenSm && user?.profile === "admin" && user?.company?.dueDate ? (
+            {greaterThenSm &&
+            user?.profile === "admin" &&
+            user?.company?.dueDate ? (
               <>
-                Olá <b>{user.name}</b>, Bem vindo a <b>{user?.company?.name}</b>! (Ativo até {dateToClient(user?.company?.dueDate)})
+                Olá <b>{user.name}</b>, Bem vindo a <b>{user?.company?.name}</b>
+                ! (Ativo até {dateToClient(user?.company?.dueDate)})
               </>
             ) : (
               <>
-                Olá  <b>{user.name}</b>, Bem vindo a <b>{user?.company?.name}</b>!
+                Olá <b>{user.name}</b>, Bem vindo a <b>{user?.company?.name}</b>
+                !
               </>
             )}
           </Typography>
 
           <IconButton edge="start" onClick={toggleColorMode}>
-            {theme.mode === 'dark' ? <Brightness7Icon style={{ color: "white" }} /> : <Brightness4Icon style={{ color: "white" }} />}
+            {theme.mode === "dark" ? (
+              <Brightness7Icon style={{ color: "white" }} />
+            ) : (
+              <Brightness4Icon style={{ color: "white" }} />
+            )}
           </IconButton>
 
-          <NotificationsVolume
-            setVolume={setVolume}
-            volume={volume}
-          />
+          <NotificationsVolume setVolume={setVolume} volume={volume} />
 
           <IconButton
             onClick={handleRefreshPage}
@@ -437,11 +452,11 @@ const LoggedInLayout = ({ children, themeToggle }) => {
               getContentAnchorEl={null}
               anchorOrigin={{
                 vertical: "bottom",
-                horizontal: "right",
+                horizontal: "right"
               }}
               transformOrigin={{
                 vertical: "top",
-                horizontal: "right",
+                horizontal: "right"
               }}
               open={menuOpen}
               onClose={handleCloseMenu}
