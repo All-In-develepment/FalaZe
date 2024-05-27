@@ -16,8 +16,12 @@ subscriptionRoutes.post(
 );
 subscriptionRoutes.post(
   "/subscription/webhook/:type?",
-  isAuthWebhook,
   SubscriptionController.webhook
 );
+// subscriptionRoutes.post(
+//   "/subscription/webhook/:type?",
+//   isAuthWebhook,
+//   SubscriptionController.webhook
+// );
 
 export default subscriptionRoutes;
