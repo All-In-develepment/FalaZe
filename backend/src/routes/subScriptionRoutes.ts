@@ -23,5 +23,6 @@ subscriptionRoutes.post(
 //   isAuthWebhook,
 //   SubscriptionController.webhook
 // );
+// webhook: https://api.falatu.app/prod/webhook
 
 export default subscriptionRoutes;

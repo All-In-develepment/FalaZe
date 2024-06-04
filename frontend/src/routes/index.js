@@ -76,12 +76,7 @@ const Routes = () => {
                   component={QuickMessages}
                   isPrivate
                 />
-                <Route
-                  exact
-                  path="/todolist"
-                  component={ToDoList}
-                  isPrivate
-                  />
+                <Route exact path="/todolist" component={ToDoList} isPrivate />
                 <Route
                   exact
                   path="/schedules"
@@ -94,7 +89,12 @@ const Routes = () => {
                 <Route exact path="/users" component={Users} isPrivate />
                 <Route exact path="/files" component={Files} isPrivate />
                 <Route exact path="/prompts" component={Prompts} isPrivate />
-                <Route exact path="/queue-integration" component={QueueIntegration} isPrivate />
+                <Route
+                  exact
+                  path="/queue-integration"
+                  component={QueueIntegration}
+                  isPrivate
+                />
 
                 <Route
                   exact
@@ -108,18 +108,8 @@ const Routes = () => {
                   component={SettingsCustom}
                   isPrivate
                 />
-				        <Route 
-                  exact
-                  path="/kanban"
-                  component={Kanban}
-                  isPrivate
-                />
-                <Route
-                  exact
-                  path="/financeiro"
-                  component={Financeiro}
-                  isPrivate
-                />
+                <Route exact path="/kanban" component={Kanban} isPrivate />
+                <Route exact path="/financeiro" component={Financeiro} />
                 <Route exact path="/queues" component={Queues} isPrivate />
                 <Route
                   exact
