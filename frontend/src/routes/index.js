@@ -109,7 +109,12 @@ const Routes = () => {
                   isPrivate
                 />
                 <Route exact path="/kanban" component={Kanban} isPrivate />
-                <Route exact path="/financeiro" component={Financeiro} />
+                <Route
+                  exact
+                  path="/financeiro"
+                  component={Financeiro}
+                  isPrivate
+                />
                 <Route exact path="/queues" component={Queues} isPrivate />
                 <Route
                   exact

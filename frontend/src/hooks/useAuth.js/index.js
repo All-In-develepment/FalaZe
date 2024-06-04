@@ -139,14 +139,14 @@ const useAuth = () => {
       } else {
         toastError(`Opss! Sua assinatura venceu ${vencimento}.
 Entre em contato com o Suporte para mais informações! `);
-        localStorage.setItem("token", JSON.stringify(data.token));
-        localStorage.setItem("companyId", companyId);
-        localStorage.setItem("userId", id);
-        localStorage.setItem("companyDueDate", vencimento);
-        api.defaults.headers.Authorization = `Bearer ${data.token}`;
-        setUser(data.user);
-        setIsAuth(false);
-        history.push("/financeiro");
+        // localStorage.setItem("token", JSON.stringify(data.token));
+        // localStorage.setItem("companyId", companyId);
+        // localStorage.setItem("userId", id);
+        // localStorage.setItem("companyDueDate", vencimento);
+        // api.defaults.headers.Authorization = `Bearer ${data.token}`;
+        // setUser(data.user);
+        // setIsAuth(false);
+        // history.push("/financeiro");
 
         setLoading(false);
       }
