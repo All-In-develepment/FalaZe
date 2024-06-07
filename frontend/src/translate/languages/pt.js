@@ -663,6 +663,7 @@ const messages = {
             attach: "Anexar Arquivo"
           }
         },
+        confirmation: "Lista Criada",
         confirmationModal: {
           deleteTitle: "Excluir",
           deleteMessage: "Esta ação não pode ser revertida."

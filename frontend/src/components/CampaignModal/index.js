@@ -31,12 +31,12 @@ import {
   MenuItem,
   Select,
   Tab,
-  Tabs,
+  Tabs
 } from "@material-ui/core";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import ConfirmationModal from "../ConfirmationModal";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
     flexWrap: "wrap",
@@ -44,22 +44,22 @@ const useStyles = makeStyles((theme) => ({
   },
 
   tabmsg: {
-    backgroundColor: theme.palette.campaigntab,
+    backgroundColor: theme.palette.campaigntab
   },
 
   textField: {
     marginRight: theme.spacing(1),
-    flex: 1,
+    flex: 1
   },
 
   extraAttr: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
 
   btnWrapper: {
-    position: "relative",
+    position: "relative"
   },
 
   buttonProgress: {
@@ -68,15 +68,15 @@ const useStyles = makeStyles((theme) => ({
     top: "50%",
     left: "50%",
     marginTop: -12,
-    marginLeft: -12,
-  },
+    marginLeft: -12
+  }
 }));
 
 const CampaignSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
-    .required("Required"),
+    .required("Required")
 });
 
 const CampaignModal = ({
@@ -85,7 +85,7 @@ const CampaignModal = ({
   campaignId,
   initialValues,
   onSave,
-  resetPagination,
+  resetPagination
 }) => {
   const classes = useStyles();
   const isMounted = useRef(true);
@@ -111,7 +111,7 @@ const CampaignModal = ({
     whatsappId: "",
     contactListId: "",
     tagListId: "Nenhuma",
-    companyId,
+    companyId
   };
 
   const [campaign, setCampaign] = useState(initialState);
@@ -142,12 +142,12 @@ const CampaignModal = ({
         toastError(err);
       }
     })();
-  }, []);
+  }, [companyId]);
 
   useEffect(() => {
     if (isMounted.current) {
       if (initialValues) {
-        setCampaign((prevState) => {
+        setCampaign(prevState => {
           return { ...prevState, ...initialValues };
         });
       }
@@ -160,24 +160,25 @@ const CampaignModal = ({
         .get(`/whatsapp`, { params: { companyId, session: 0 } })
         .then(({ data }) => setWhatsapps(data));
 
-      api.get(`/tags`, { params: { companyId } })
+      api
+        .get(`/tags`, { params: { companyId } })
         .then(({ data }) => {
           const fetchedTags = data.tags;
           // Perform any necessary data transformation here
-          const formattedTagLists = fetchedTags.map((tag) => ({
+          const formattedTagLists = fetchedTags.map(tag => ({
             id: tag.id,
-            name: tag.name,
+            name: tag.name
           }));
           setTagLists(formattedTagLists);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Error retrieving tags:", error);
         });
-        
+
       if (!campaignId) return;
 
       api.get(`/campaigns/${campaignId}`).then(({ data }) => {
-        setCampaign((prev) => {
+        setCampaign(prev => {
           let prevCampaignData = Object.assign({}, prev);
 
           Object.entries(data).forEach(([key, value]) => {
@@ -211,14 +212,14 @@ const CampaignModal = ({
     setCampaign(initialState);
   };
 
-  const handleAttachmentFile = (e) => {
+  const handleAttachmentFile = e => {
     const file = head(e.target.files);
     if (file) {
       setAttachment(file);
     }
   };
 
-  const handleSaveCampaign = async (values) => {
+  const handleSaveCampaign = async values => {
     try {
       const dataValues = {};
       Object.entries(values).forEach(([key, value]) => {
@@ -266,12 +267,12 @@ const CampaignModal = ({
 
     if (campaign.mediaPath) {
       await api.delete(`/campaigns/${campaign.id}/media-upload`);
-      setCampaign((prev) => ({ ...prev, mediaPath: null, mediaName: null }));
+      setCampaign(prev => ({ ...prev, mediaPath: null, mediaName: null }));
       toast.success(i18n.t("campaigns.toasts.deleted"));
     }
   };
 
-  const renderMessageField = (identifier) => {
+  const renderMessageField = identifier => {
     return (
       <Field
         as={TextField}
@@ -289,7 +290,7 @@ const CampaignModal = ({
     );
   };
 
-  const renderConfirmationMessageField = (identifier) => {
+  const renderConfirmationMessageField = identifier => {
     return (
       <Field
         as={TextField}
@@ -310,7 +311,7 @@ const CampaignModal = ({
     try {
       await api.post(`/campaigns/${campaign.id}/cancel`);
       toast.success(i18n.t("campaigns.toasts.cancel"));
-      setCampaign((prev) => ({ ...prev, status: "CANCELADA" }));
+      setCampaign(prev => ({ ...prev, status: "CANCELADA" }));
       resetPagination();
     } catch (err) {
       toast.error(err.message);
@@ -321,7 +322,7 @@ const CampaignModal = ({
     try {
       await api.post(`/campaigns/${campaign.id}/restart`);
       toast.success(i18n.t("campaigns.toasts.restart"));
-      setCampaign((prev) => ({ ...prev, status: "EM_ANDAMENTO" }));
+      setCampaign(prev => ({ ...prev, status: "EM_ANDAMENTO" }));
       resetPagination();
     } catch (err) {
       toast.error(err.message);
@@ -360,7 +361,7 @@ const CampaignModal = ({
           <input
             type="file"
             ref={attachmentFile}
-            onChange={(e) => handleAttachmentFile(e)}
+            onChange={e => handleAttachmentFile(e)}
           />
         </div>
         <Formik
@@ -378,7 +379,7 @@ const CampaignModal = ({
             <Form>
               <DialogContent dividers>
                 <Grid spacing={2} container>
-                  <Grid xs={12} md={9} item>
+                  <Grid xs={12} md={8} item>
                     <Field
                       as={TextField}
                       label={i18n.t("campaigns.dialog.form.name")}
@@ -392,7 +393,7 @@ const CampaignModal = ({
                       disabled={!campaignEditable}
                     />
                   </Grid>
-                  <Grid xs={12} md={3} item>
+                  {/* <Grid xs={12} md={3} item>
                     <FormControl
                       variant="outlined"
                       margin="dense"
@@ -420,7 +421,7 @@ const CampaignModal = ({
                         <MenuItem value={true}>Habilitada</MenuItem>
                       </Field>
                     </FormControl>
-                  </Grid>
+                  </Grid> */}
                   <Grid xs={12} md={4} item>
                     <FormControl
                       variant="outlined"
@@ -447,7 +448,7 @@ const CampaignModal = ({
                       >
                         <MenuItem value="">Nenhuma</MenuItem>
                         {contactLists &&
-                          contactLists.map((contactList) => (
+                          contactLists.map(contactList => (
                             <MenuItem
                               key={contactList.id}
                               value={contactList.id}
@@ -480,7 +481,7 @@ const CampaignModal = ({
                       >
                         <MenuItem value="">Nenhuma</MenuItem>
                         {Array.isArray(tagLists) &&
-                          tagLists.map((tagList) => (
+                          tagLists.map(tagList => (
                             <MenuItem key={tagList.id} value={tagList.id}>
                               {tagList.name}
                             </MenuItem>
@@ -510,7 +511,7 @@ const CampaignModal = ({
                       >
                         <MenuItem value="">Nenhuma</MenuItem>
                         {whatsapps &&
-                          whatsapps.map((whatsapp) => (
+                          whatsapps.map(whatsapp => (
                             <MenuItem key={whatsapp.id} value={whatsapp.id}>
                               {whatsapp.name}
                             </MenuItem>
@@ -529,7 +530,7 @@ const CampaignModal = ({
                       margin="dense"
                       type="datetime-local"
                       InputLabelProps={{
-                        shrink: true,
+                        shrink: true
                       }}
                       fullWidth
                       className={classes.textField}
@@ -537,13 +538,15 @@ const CampaignModal = ({
                     />
                   </Grid>
                   <Grid xs={12} md={4} item>
-                  <FormControl
+                    <FormControl
                       variant="outlined"
                       margin="dense"
                       className={classes.FormControl}
                       fullWidth
                     >
-                      <InputLabel id="fileListId-selection-label">{i18n.t("campaigns.dialog.form.fileList")}</InputLabel>
+                      <InputLabel id="fileListId-selection-label">
+                        {i18n.t("campaigns.dialog.form.fileList")}
+                      </InputLabel>
                       <Field
                         as={Select}
                         label={i18n.t("campaigns.dialog.form.fileList")}
@@ -553,7 +556,7 @@ const CampaignModal = ({
                         labelId="fileListId-selection-label"
                         value={values.fileListId || ""}
                       >
-                        <MenuItem value={""} >{"Nenhum"}</MenuItem>
+                        <MenuItem value={""}>{"Nenhum"}</MenuItem>
                         {file.map(f => (
                           <MenuItem key={f.id} value={f.id}>
                             {f.name}
@@ -572,7 +575,7 @@ const CampaignModal = ({
                       variant="fullWidth"
                       centered
                       style={{
-                        borderRadius: 2,
+                        borderRadius: 2
                       }}
                     >
                       <Tab label="Msg. 1" index={0} />
